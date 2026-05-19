@@ -18,3 +18,7 @@ final geoJsonDaoProvider = Provider((ref) {
 final chatDaoProvider = Provider((ref) {
   return ref.watch(databaseProvider).chatDao;
 });
+
+final historicalEventsDaoProvider = Provider((ref) {
+  return ref.watch(databaseProvider).historicalEventsDao;
+});

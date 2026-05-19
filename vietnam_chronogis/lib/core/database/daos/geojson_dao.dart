@@ -18,4 +18,8 @@ class GeoJsonDao extends DatabaseAccessor<AppDatabase> with _$GeoJsonDaoMixin {
   Future<GeoJsonCach?> getGeoJsonByMa(String ma) {
     return (select(geoJsonCaches)..where((t) => t.ma.equals(ma))).getSingleOrNull();
   }
+
+  Future<void> clearCache() async {
+    await delete(geoJsonCaches).go();
+  }
 }

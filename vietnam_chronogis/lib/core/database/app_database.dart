@@ -14,6 +14,7 @@ import 'tables/chat_history_table.dart';
 import 'daos/administrative_unit_dao.dart';
 import 'daos/geojson_dao.dart';
 import 'daos/chat_dao.dart';
+import 'daos/historical_events_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -28,6 +29,7 @@ part 'app_database.g.dart';
     AdministrativeUnitDao,
     GeoJsonDao,
     ChatDao,
+    HistoricalEventsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {

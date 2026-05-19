@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../map/presentation/map_view_screen.dart';
 import '../../map/presentation/widgets/timeline_panel.dart';
 import '../../ai_chat/presentation/ai_insights_screen.dart';
+import '../../explorer/presentation/explorer_screen.dart';
+import '../../archives/presentation/archives_screen.dart';
+import '../../map/presentation/widgets/admin_search_bar.dart';
+import '../../map/presentation/widgets/search_results_list.dart';
+import '../../map/presentation/widgets/region_list_widget.dart';
+import '../../settings/presentation/settings_drawer.dart';
+import '../../../shared/providers/search_provider.dart';
 
 final selectedTabProvider = StateProvider<int>((ref) => 0);
 
@@ -14,36 +22,46 @@ class AppShell extends ConsumerStatefulWidget {
 }
 
 class _AppShellState extends ConsumerState<AppShell> {
+  final _searchBarKey = GlobalKey<AdminSearchBarState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final selectedTab = ref.watch(selectedTabProvider);
     final isSidebarExpanded = MediaQuery.of(context).size.width >= 1000;
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                _buildNavigationRail(selectedTab),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  width: isSidebarExpanded ? 280 : 0,
-                  child: const SidebarWidget(),
+    return CallbackShortcuts(
+      bindings: <ShortcutActivator, VoidCallback>{
+        const SingleActivator(LogicalKeyboardKey.keyF, control: true): () {
+          _searchBarKey.currentState?.requestFocus();
+        },
+      },
+      child: Focus(
+        autofocus: true,
+        child: Scaffold(
+          key: _scaffoldKey,
+          endDrawer: const SettingsDrawer(),
+          body: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    _buildNavigationRail(selectedTab),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      width: isSidebarExpanded ? 280 : 0,
+                      child: _SidebarWidget(searchBarKey: _searchBarKey),
+                    ),
+                    Expanded(
+                      child: _buildMainContent(selectedTab),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: _buildMainContent(selectedTab),
-                ),
-              ],
-            ),
+              ),
+              if (selectedTab == 0) const TimelinePanel(),
+            ],
           ),
-          // We moved the TimelinePanel into MapViewScreen for better overlay, 
-          // or we can keep it here. Let's keep it global if needed, but since 
-          // MapViewScreen has it, we just omit the placeholder if we use it inside MapViewScreen.
-          // Actually, let's use the real TimelinePanel here globally so it persists across tabs.
-          if (selectedTab == 0)
-            const TimelinePanel(),
-        ],
+        ),
       ),
     );
   }
@@ -56,11 +74,30 @@ class _AppShellState extends ConsumerState<AppShell> {
       },
       backgroundColor: const Color(0xFF1A1D23),
       indicatorColor: const Color(0xFF2D5A8E),
+      trailing: Expanded(
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: IconButton(
+              icon: const Icon(Icons.settings, size: 22),
+              color: const Color(0xFF9AA0B0),
+              onPressed: () {
+                _scaffoldKey.currentState?.openEndDrawer();
+              },
+              tooltip: 'Cài đặt',
+            ),
+          ),
+        ),
+      ),
       destinations: const [
         NavigationRailDestination(icon: Icon(Icons.map), label: Text('Map')),
-        NavigationRailDestination(icon: Icon(Icons.explore), label: Text('Explorer')),
-        NavigationRailDestination(icon: Icon(Icons.book), label: Text('Archives')),
-        NavigationRailDestination(icon: Icon(Icons.smart_toy), label: Text('AI')),
+        NavigationRailDestination(
+            icon: Icon(Icons.explore), label: Text('Explorer')),
+        NavigationRailDestination(
+            icon: Icon(Icons.book), label: Text('Archives')),
+        NavigationRailDestination(
+            icon: Icon(Icons.smart_toy), label: Text('AI')),
       ],
     );
   }
@@ -70,40 +107,45 @@ class _AppShellState extends ConsumerState<AppShell> {
       index: selectedTab,
       children: const [
         MapViewScreen(),
-        Center(child: Text('Explorer Placeholder')),
-        Center(child: Text('Archives Placeholder')),
+        ExplorerScreen(),
+        ArchivesScreen(),
         AiInsightsScreen(),
       ],
     );
   }
 }
 
-class SidebarWidget extends StatelessWidget {
-  const SidebarWidget({super.key});
+class _SidebarWidget extends ConsumerWidget {
+  final GlobalKey<AdminSearchBarState> searchBarKey;
+
+  const _SidebarWidget({required this.searchBarKey});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final query = ref.watch(searchQueryProvider);
+    final hasQuery = query.trim().isNotEmpty;
+
     return Container(
       color: const Color(0xFF1A1D23),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              'Administrative Search',
+              'Tìm kiếm hành chính',
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: SearchBar(
-              hintText: 'Search province...',
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: AdminSearchBar(key: searchBarKey),
           ),
-          const Expanded(
-            child: Center(child: Text('List Placeholder')),
-          ),
+          const SizedBox(height: 4),
+          if (hasQuery)
+            const Expanded(child: SearchResultsList())
+          else
+            const Expanded(child: RegionListWidget()),
           const Divider(height: 1),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -118,7 +160,8 @@ class SidebarWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text('Database Sync Online', style: TextStyle(fontSize: 12)),
+                const Text('Database Sync Online',
+                    style: TextStyle(fontSize: 12)),
               ],
             ),
           ),
@@ -127,5 +170,3 @@ class SidebarWidget extends StatelessWidget {
     );
   }
 }
-
-// TimelinePanelPlaceholder removed
