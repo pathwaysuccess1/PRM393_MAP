@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/theme/theme_provider.dart';
-import 'map_provider.dart';
 
 const _kGeminiApiKeyKey = 'gemini_api_key';
 const _kMapTileLayerKey = 'map_tile_layer';
@@ -66,7 +65,7 @@ class SettingsNotifier extends AsyncNotifier<SettingsState> {
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
-    ref.read(themeProvider.notifier).toggleTheme();
+    ref.read(themeProvider.notifier).setMode(mode);
     state = AsyncData(state.value!.copyWith(themeMode: mode));
   }
 

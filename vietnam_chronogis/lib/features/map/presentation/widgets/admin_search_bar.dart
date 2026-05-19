@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/providers/search_provider.dart';
@@ -39,14 +38,16 @@ class AdminSearchBarState extends ConsumerState<AdminSearchBar> {
   }
 
   void _onChanged(String value) {
+    setState(() {});
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       ref.read(searchQueryProvider.notifier).state = value;
     });
   }
 
-  void _clear() {
+  void clearText() {
     _controller.clear();
+    setState(() {});
     ref.read(searchQueryProvider.notifier).state = '';
     _focusNode.requestFocus();
   }
@@ -70,7 +71,7 @@ class AdminSearchBarState extends ConsumerState<AdminSearchBar> {
         suffixIcon: _controller.text.isNotEmpty
             ? IconButton(
                 icon: const Icon(Icons.close, size: 18),
-                onPressed: _clear,
+                onPressed: clearText,
                 color: const Color(0xFF9AA0B0),
               )
             : null,

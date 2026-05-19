@@ -16,6 +16,8 @@ final selectedProvinceDetailProvider =
   final selectedMa = ref.watch(selectedProvinceProvider);
   if (selectedMa == null) return null;
 
+  ref.read(communesPageProvider.notifier).state = 1;
+
   final dao = ref.watch(administrativeUnitDaoProvider);
   final province = await dao.getUnitByMa(selectedMa);
   if (province == null) return null;

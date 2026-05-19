@@ -23,6 +23,11 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
     state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     prefs.setInt('themeMode', state.index);
   }
+
+  void setMode(ThemeMode mode) {
+    state = mode;
+    prefs.setInt('themeMode', mode.index);
+  }
 }
 
 final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
