@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../map/presentation/map_view_screen.dart';
 import '../../map/presentation/widgets/timeline_panel.dart';
 import '../../ai_chat/presentation/ai_insights_screen.dart';
+import '../../explorer/presentation/explorer_screen.dart';
+import '../../archives/presentation/archives_screen.dart';
 
 final selectedTabProvider = StateProvider<int>((ref) => 0);
 
@@ -70,8 +72,8 @@ class _AppShellState extends ConsumerState<AppShell> {
       index: selectedTab,
       children: const [
         MapViewScreen(),
-        Center(child: Text('Explorer Placeholder')),
-        Center(child: Text('Archives Placeholder')),
+        ExplorerScreen(),
+        ArchivesScreen(),
         AiInsightsScreen(),
       ],
     );
