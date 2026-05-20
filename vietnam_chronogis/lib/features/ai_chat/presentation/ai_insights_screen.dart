@@ -102,12 +102,12 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.history_edu, size: 64, color: Colors.white.withOpacity(0.2)),
+          Icon(Icons.history_edu, size: 64, color: Colors.white.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           Text(
             'Hỏi AI về lịch sử hành chính Việt Nam',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               fontSize: 16,
             ),
           ),
@@ -130,8 +130,8 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
           children: suggestions.map((text) {
             return ActionChip(
               backgroundColor: const Color(0xFF1E2128),
-              side: BorderSide(color: Colors.white.withOpacity(0.1)),
-              label: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13)),
+              side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              label: Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 13)),
               onPressed: () {
                 ref.read(chatNotifierProvider.notifier).sendMessage(text);
               },
@@ -140,7 +140,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
         );
       },
       loading: () => const CircularProgressIndicator(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 }

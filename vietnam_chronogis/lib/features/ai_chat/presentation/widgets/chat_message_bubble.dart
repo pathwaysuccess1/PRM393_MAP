@@ -31,7 +31,7 @@ class ChatMessageBubble extends StatelessWidget {
                   bottomLeft: const Radius.circular(18),
                   bottomRight: const Radius.circular(18),
                 ),
-                border: isUser ? null : Border.all(color: Colors.white.withOpacity(0.05)),
+                border: isUser ? null : Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: _buildContent(),
             ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.1, end: 0),
@@ -51,7 +51,7 @@ class ChatMessageBubble extends StatelessWidget {
         Text(
           message.content,
           style: TextStyle(
-            color: message.role == MessageRole.user ? Colors.white : Colors.white.withOpacity(0.9),
+            color: message.role == MessageRole.user ? Colors.white : Colors.white.withValues(alpha: 0.9),
             fontSize: 14,
             height: 1.4,
           ),
@@ -115,7 +115,7 @@ class _LoadingDotsState extends State<_LoadingDots> with SingleTickerProviderSta
               padding: const EdgeInsets.only(right: 4),
               child: CircleAvatar(
                 radius: 3,
-                backgroundColor: Colors.white.withOpacity(opacity),
+                backgroundColor: Colors.white.withValues(alpha: opacity),
               ),
             );
           },

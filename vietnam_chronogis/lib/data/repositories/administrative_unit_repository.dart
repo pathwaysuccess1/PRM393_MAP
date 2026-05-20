@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/huggingface_api_client.dart';
-import '../../core/database/app_database.dart';
 import '../../core/database/daos/administrative_unit_dao.dart';
 import '../../shared/providers/database_provider.dart';
 import '../../shared/providers/api_provider.dart';

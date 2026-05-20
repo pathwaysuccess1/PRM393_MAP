@@ -7,7 +7,7 @@ part 'chat_dao.g.dart';
 
 @DriftAccessor(tables: [ChatHistoryMessages])
 class ChatDao extends DatabaseAccessor<AppDatabase> with _$ChatDaoMixin {
-  ChatDao(AppDatabase db) : super(db);
+  ChatDao(super.db);
 
   Future<void> insertMessage(ChatHistoryMessage message) async {
     await into(chatHistoryMessages).insert(message);

@@ -7,7 +7,7 @@ part 'administrative_unit_dao.g.dart';
 
 @DriftAccessor(tables: [AdministrativeUnits])
 class AdministrativeUnitDao extends DatabaseAccessor<AppDatabase> with _$AdministrativeUnitDaoMixin {
-  AdministrativeUnitDao(AppDatabase db) : super(db);
+  AdministrativeUnitDao(super.db);
 
   Future<void> upsertUnit(AdministrativeUnit unit) async {
     await into(administrativeUnits).insertOnConflictUpdate(unit);

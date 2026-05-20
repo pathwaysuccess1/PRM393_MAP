@@ -30,12 +30,12 @@ class ProvinceInfoPopup extends ConsumerWidget {
           margin: const EdgeInsets.only(bottom: 24, right: 24),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1D23).withOpacity(0.95),
+            color: const Color(0xFF1A1D23).withValues(alpha: 0.95),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
@@ -70,7 +70,7 @@ class ProvinceInfoPopup extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -85,7 +85,7 @@ class ProvinceInfoPopup extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               _buildInfoRow(Icons.people, 'Population', 
-                  unit.population != null ? '${popFormat.format(unit.population)}' : 'N/A'),
+                  unit.population != null ? popFormat.format(unit.population) : 'N/A'),
               const SizedBox(height: 8),
               _buildInfoRow(Icons.map, 'Area', 
                   unit.area != null ? '${areaFormat.format(unit.area)} km²' : 'N/A'),

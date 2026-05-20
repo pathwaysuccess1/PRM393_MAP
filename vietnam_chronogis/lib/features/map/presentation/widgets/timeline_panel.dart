@@ -16,9 +16,9 @@ class TimelinePanel extends ConsumerWidget {
     return Container(
       height: 140,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1D23).withOpacity(0.95),
+        color: const Color(0xFF1A1D23).withValues(alpha: 0.95),
         border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.1)),
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
       ),
       child: Column(
@@ -64,7 +64,7 @@ class TimelinePanel extends ConsumerWidget {
               child: SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: era.color,
-                  inactiveTrackColor: Colors.white.withOpacity(0.1),
+                  inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
                   thumbColor: era.color,
                   overlayColor: era.color.withOpacity(0.2),
                   trackHeight: 4,

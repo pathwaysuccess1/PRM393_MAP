@@ -38,7 +38,7 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF1A1D23),
-        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05))),
+        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
@@ -53,7 +53,7 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
                 child: Text(
                   'Đang xem: ${ctx.currentYear} · ${ctx.selectedProvinceEmbedText ?? "Toàn quốc"}',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: 12,
                   ),
                 ),
@@ -70,7 +70,7 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
                   decoration: BoxDecoration(
                     color: const Color(0xFF12151C),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
@@ -81,7 +81,7 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Hỏi về lịch sử hành chính...',
-                            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           ),
@@ -106,7 +106,7 @@ class _ChatInputBarState extends ConsumerState<ChatInputBar> {
               Container(
                 decoration: BoxDecoration(
                   color: isStreaming || _controller.text.trim().isEmpty
-                      ? Colors.white.withOpacity(0.1)
+                      ? Colors.white.withValues(alpha: 0.1)
                       : const Color(0xFF2D5A8E),
                   shape: BoxShape.circle,
                 ),

@@ -27,8 +27,8 @@ final mapPolygonsProvider = FutureProvider<List<Polygon>>((ref) async {
       final decoded = jsonDecode(cached.geoJsonData) as List<dynamic>;
       
       final isSelected = selectedMa == province.ma;
-      final fillColor = _getColorForRegion(province.macroRegion).withOpacity(isSelected ? 0.6 : 0.35);
-      final borderColor = isSelected ? Colors.white : Colors.white.withOpacity(0.4);
+      final fillColor = _getColorForRegion(province.macroRegion).withValues(alpha: isSelected ? 0.6 : 0.35);
+      final borderColor = isSelected ? Colors.white : Colors.white.withValues(alpha: 0.4);
       final borderThickness = isSelected ? 2.0 : (showBorders ? 1.0 : 0.0);
 
       // Simple implementation assuming list of list of lat/lng pairs

@@ -7,7 +7,7 @@ part 'geojson_dao.g.dart';
 
 @DriftAccessor(tables: [GeoJsonCaches])
 class GeoJsonDao extends DatabaseAccessor<AppDatabase> with _$GeoJsonDaoMixin {
-  GeoJsonDao(AppDatabase db) : super(db);
+  GeoJsonDao(super.db);
 
   Future<void> cacheGeoJson(String ma, String data) async {
     await into(geoJsonCaches).insertOnConflictUpdate(
