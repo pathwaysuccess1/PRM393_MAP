@@ -2,9 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/daos/chat_dao.dart';
 import '../../shared/models/chat_message.dart';
+// FIX: dùng databaseProvider thay vì appDatabaseProvider (không tồn tại)
+import '../../shared/providers/database_provider.dart';
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
-  final db = ref.watch(appDatabaseProvider);
+  final db = ref.watch(databaseProvider); // FIX: was appDatabaseProvider
   return ChatRepository(db.chatDao);
 });
 
@@ -20,6 +22,7 @@ class ChatRepository {
         role: message.role.name,
         content: message.content,
         timestamp: message.timestamp,
+        contextJson: null,
       ),
     );
   }
@@ -29,7 +32,10 @@ class ChatRepository {
       return rows.map((row) {
         return ChatMessage(
           id: row.id,
-          role: MessageRole.values.firstWhere((e) => e.name == row.role, orElse: () => MessageRole.user),
+          role: MessageRole.values.firstWhere(
+            (e) => e.name == row.role,
+            orElse: () => MessageRole.user,
+          ),
           content: row.content,
           timestamp: row.timestamp,
           isStreaming: false,

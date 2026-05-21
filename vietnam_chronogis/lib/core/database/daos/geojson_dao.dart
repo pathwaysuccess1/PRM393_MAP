@@ -10,12 +10,16 @@ class GeoJsonDao extends DatabaseAccessor<AppDatabase> with _$GeoJsonDaoMixin {
   GeoJsonDao(super.db);
 
   Future<void> cacheGeoJson(String ma, String data) async {
-    await into(geoJsonCaches).insertOnConflictUpdate(
-      GeoJsonCach(ma: ma, geoJsonData: data),
-    );
+    // FIX: GeoJsonCach → GeoJsonCache (đúng tên @DataClassName trong table)
+    await into(
+      geoJsonCaches,
+    ).insertOnConflictUpdate(GeoJsonCache(ma: ma, geoJsonData: data));
   }
 
-  Future<GeoJsonCach?> getGeoJsonByMa(String ma) {
-    return (select(geoJsonCaches)..where((t) => t.ma.equals(ma))).getSingleOrNull();
+  // FIX: GeoJsonCach? → GeoJsonCache?
+  Future<GeoJsonCache?> getGeoJsonByMa(String ma) {
+    return (select(
+      geoJsonCaches,
+    )..where((t) => t.ma.equals(ma))).getSingleOrNull();
   }
 }

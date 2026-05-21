@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_map/flutter_map.dart';
+// FIX: bỏ import flutter_map — không dùng trực tiếp trong file này
+// import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../../shared/providers/map_provider.dart';
 
@@ -10,7 +11,8 @@ class MapControlsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapController = ref.watch(mapControllerStateProvider);
-    final isSatellite = ref.watch(mapTileStyleStateProvider) == MapTileStyle.satellite;
+    final isSatellite =
+        ref.watch(mapTileStyleStateProvider) == MapTileStyle.satellite;
     final showBorders = ref.watch(showBordersStateProvider);
 
     return Column(
@@ -45,17 +47,14 @@ class MapControlsWidget extends ConsumerWidget {
         _buildButton(
           icon: isSatellite ? Icons.map : Icons.satellite,
           tooltip: 'Toggle Map Style',
-          onPressed: () {
-            ref.read(mapTileStyleStateProvider.notifier).toggle();
-          },
+          onPressed: () =>
+              ref.read(mapTileStyleStateProvider.notifier).toggle(),
         ),
         const SizedBox(height: 8),
         _buildButton(
           icon: showBorders ? Icons.grid_on : Icons.grid_off,
           tooltip: 'Toggle Borders',
-          onPressed: () {
-            ref.read(showBordersStateProvider.notifier).toggle();
-          },
+          onPressed: () => ref.read(showBordersStateProvider.notifier).toggle(),
         ),
       ],
     );

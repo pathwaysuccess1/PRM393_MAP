@@ -4,7 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/administrative_unit_repository.dart';
 import 'geojson_provider.dart';
 
-final seedProgressProvider = StateProvider<double>((ref) => 0.0);
+// FIX: StateProvider<double> đã bị xóa trong Riverpod 3.x
+// Migration → Notifier<double> + NotifierProvider
+class SeedProgressNotifier extends Notifier<double> {
+  @override
+  double build() => 0.0;
+
+  void setProgress(double value) => state = value;
+}
+
+final seedProgressProvider = NotifierProvider<SeedProgressNotifier, double>(
+  SeedProgressNotifier.new,
+);
 
 final seedInitializationProvider = FutureProvider<bool>((ref) async {
   final prefs = await SharedPreferences.getInstance();
@@ -13,19 +24,18 @@ final seedInitializationProvider = FutureProvider<bool>((ref) async {
   if (!hasSeeded) {
     final repository = ref.read(administrativeUnitRepositoryProvider);
     final geojsonService = ref.read(provinceGeoJsonServiceProvider);
-    
+
     await for (final progress in repository.seedFromApi()) {
-      // Reserve 0.0-0.8 for API seeding, and 0.8-1.0 for GeoJSON mapping
-      ref.read(seedProgressProvider.notifier).state = progress * 0.8;
+      // FIX: dùng .setProgress() thay vì .state = (state là @protected)
+      ref.read(seedProgressProvider.notifier).setProgress(progress * 0.8);
     }
-    
-    // Parse and match GeoJSON
-    ref.read(seedProgressProvider.notifier).state = 0.85;
+
+    ref.read(seedProgressProvider.notifier).setProgress(0.85);
     await geojsonService.loadAndMatchGeoJson();
-    ref.read(seedProgressProvider.notifier).state = 1.0;
-    
+    ref.read(seedProgressProvider.notifier).setProgress(1.0);
+
     await prefs.setBool('seeded_v1', true);
   }
-  
+
   return true;
 });

@@ -23,17 +23,18 @@ class TimelinePanel extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          // Top Row: Controls & Stats
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {
-                    ref.read(isPlayingProvider.notifier).toggle();
-                  },
+                  onPressed: () =>
+                      ref.read(isPlayingProvider.notifier).toggle(),
                   icon: Icon(
-                    isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                    isPlaying
+                        ? Icons.pause_circle_filled
+                        : Icons.play_circle_fill,
                     size: 40,
                     color: era.color,
                   ),
@@ -45,10 +46,7 @@ class TimelinePanel extends ConsumerWidget {
                   child: Text(
                     era.description,
                     textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -56,8 +54,6 @@ class TimelinePanel extends ConsumerWidget {
               ],
             ),
           ),
-          
-          // Bottom Row: Slider
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -66,7 +62,8 @@ class TimelinePanel extends ConsumerWidget {
                   activeTrackColor: era.color,
                   inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
                   thumbColor: era.color,
-                  overlayColor: era.color.withOpacity(0.2),
+                  // FIX: withOpacity deprecated → withValues(alpha:)
+                  overlayColor: era.color.withValues(alpha: 0.2),
                   trackHeight: 4,
                   valueIndicatorTextStyle: const TextStyle(
                     color: Colors.white,
@@ -80,11 +77,12 @@ class TimelinePanel extends ConsumerWidget {
                   divisions: 50,
                   label: year.toString(),
                   onChanged: (value) {
-                    // Pause playback if user manually seeks
                     if (ref.read(isPlayingProvider)) {
                       ref.read(isPlayingProvider.notifier).toggle();
                     }
-                    ref.read(selectedYearProvider.notifier).setYear(value.toInt());
+                    ref
+                        .read(selectedYearProvider.notifier)
+                        .setYear(value.toInt());
                   },
                 ),
               ),

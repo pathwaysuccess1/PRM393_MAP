@@ -6,10 +6,15 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError('Initialize this in main');
 });
 
-class ThemeNotifier extends StateNotifier<ThemeMode> {
-  final SharedPreferences prefs;
-
-  ThemeNotifier(this.prefs) : super(_loadThemeMode(prefs));
+// FIX: StateNotifier<T> đã bị xóa trong Riverpod 3.x
+// Migration: StateNotifier<T> → Notifier<T>
+class ThemeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() {
+    // ref có sẵn trong Notifier, không cần inject qua constructor
+    final prefs = ref.read(sharedPreferencesProvider);
+    return _loadThemeMode(prefs);
+  }
 
   static ThemeMode _loadThemeMode(SharedPreferences prefs) {
     final index = prefs.getInt('themeMode');
@@ -21,11 +26,10 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
 
   void toggleTheme() {
     state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
-    prefs.setInt('themeMode', state.index);
+    ref.read(sharedPreferencesProvider).setInt('themeMode', state.index);
   }
 }
 
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return ThemeNotifier(prefs);
-});
+// FIX: StateNotifierProvider → NotifierProvider
+final themeProvider =
+    NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);

@@ -4,7 +4,17 @@ import '../../map/presentation/map_view_screen.dart';
 import '../../map/presentation/widgets/timeline_panel.dart';
 import '../../ai_chat/presentation/ai_insights_screen.dart';
 
-final selectedTabProvider = StateProvider<int>((ref) => 0);
+// FIX: StateProvider<int> đã bị xóa trong Riverpod 3.x
+// Migration: StateProvider → Notifier + NotifierProvider
+class SelectedTab extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void select(int index) => state = index;
+}
+
+final selectedTabProvider =
+    NotifierProvider<SelectedTab, int>(SelectedTab.new);
 
 class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key});
@@ -37,12 +47,7 @@ class _AppShellState extends ConsumerState<AppShell> {
               ],
             ),
           ),
-          // We moved the TimelinePanel into MapViewScreen for better overlay, 
-          // or we can keep it here. Let's keep it global if needed, but since 
-          // MapViewScreen has it, we just omit the placeholder if we use it inside MapViewScreen.
-          // Actually, let's use the real TimelinePanel here globally so it persists across tabs.
-          if (selectedTab == 0)
-            const TimelinePanel(),
+          if (selectedTab == 0) const TimelinePanel(),
         ],
       ),
     );
@@ -52,15 +57,19 @@ class _AppShellState extends ConsumerState<AppShell> {
     return NavigationRail(
       selectedIndex: selectedTab,
       onDestinationSelected: (index) {
-        ref.read(selectedTabProvider.notifier).state = index;
+        // FIX: dùng .select() thay vì .state = (state là @protected trong Notifier)
+        ref.read(selectedTabProvider.notifier).select(index);
       },
       backgroundColor: const Color(0xFF1A1D23),
       indicatorColor: const Color(0xFF2D5A8E),
       destinations: const [
         NavigationRailDestination(icon: Icon(Icons.map), label: Text('Map')),
-        NavigationRailDestination(icon: Icon(Icons.explore), label: Text('Explorer')),
-        NavigationRailDestination(icon: Icon(Icons.book), label: Text('Archives')),
-        NavigationRailDestination(icon: Icon(Icons.smart_toy), label: Text('AI')),
+        NavigationRailDestination(
+            icon: Icon(Icons.explore), label: Text('Explorer')),
+        NavigationRailDestination(
+            icon: Icon(Icons.book), label: Text('Archives')),
+        NavigationRailDestination(
+            icon: Icon(Icons.smart_toy), label: Text('AI')),
       ],
     );
   }
@@ -97,13 +106,9 @@ class SidebarWidget extends StatelessWidget {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: SearchBar(
-              hintText: 'Search province...',
-            ),
+            child: SearchBar(hintText: 'Search province...'),
           ),
-          const Expanded(
-            child: Center(child: Text('List Placeholder')),
-          ),
+          const Expanded(child: Center(child: Text('List Placeholder'))),
           const Divider(height: 1),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -118,7 +123,8 @@ class SidebarWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text('Database Sync Online', style: TextStyle(fontSize: 12)),
+                const Text('Database Sync Online',
+                    style: TextStyle(fontSize: 12)),
               ],
             ),
           ),
@@ -127,5 +133,3 @@ class SidebarWidget extends StatelessWidget {
     );
   }
 }
-
-// TimelinePanelPlaceholder removed

@@ -5,54 +5,69 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../core/database/app_database.dart';
-import '../../../data/repositories/administrative_unit_repository.dart';
+// FIX: import DAO providers trực tiếp thay vì repository
+import '../../../shared/providers/database_provider.dart';
 import '../../../shared/providers/map_provider.dart';
 import '../../../shared/providers/timeline_provider.dart';
 import 'widgets/map_controls_widget.dart';
 import 'widgets/province_info_popup.dart';
-import 'widgets/timeline_panel.dart';
 
+// FIX: dùng DAO providers thay vì repo.getAllProvinces() / repo.db
 final mapPolygonsProvider = FutureProvider<List<Polygon>>((ref) async {
-  final repo = ref.watch(administrativeUnitRepositoryProvider);
-  final provinces = await repo.getAllProvinces();
+  final unitDao = ref.watch(administrativeUnitDaoProvider);
+  final geoJsonDao = ref.watch(geoJsonDaoProvider);
   final showBorders = ref.watch(showBordersStateProvider);
   final selectedMa = ref.watch(selectedProvinceProvider);
 
-  List<Polygon> polygons = [];
+  final provinces = await unitDao.getAllProvinces();
+  final List<Polygon> polygons = [];
 
   for (final province in provinces) {
-    final cached = await repo.db.geoJsonDao.getGeoJsonByMa(province.ma);
-    if (cached != null) {
-      final decoded = jsonDecode(cached.geoJsonData) as List<dynamic>;
-      
-      final isSelected = selectedMa == province.ma;
-      final fillColor = _getColorForRegion(province.macroRegion).withValues(alpha: isSelected ? 0.6 : 0.35);
-      final borderColor = isSelected ? Colors.white : Colors.white.withValues(alpha: 0.4);
-      final borderThickness = isSelected ? 2.0 : (showBorders ? 1.0 : 0.0);
+    final cached = await geoJsonDao.getGeoJsonByMa(province.ma);
+    if (cached == null) continue;
 
-      // Simple implementation assuming list of list of lat/lng pairs
-      // Note: A real app might need more complex parsing for MultiPolygon vs Polygon
-      try {
-        List<LatLng> points = [];
-        for (var pt in decoded) {
+    try {
+      // FIX: cấu trúc lưu trong province_geojson_service.dart là:
+      // List<Polygon> → List<Ring> → List<[lat, lon]>   (lưu bằng [pt.latitude, pt.longitude])
+      // decoded: [ polygon [ ring [ [lat, lon], ... ] ] ]
+      final decoded = jsonDecode(cached.geoJsonData) as List<dynamic>;
+
+      final isSelected = selectedMa == province.ma;
+      final fillColor = _getColorForRegion(province.macroRegion)
+          .withValues(alpha: isSelected ? 0.6 : 0.35);
+      final borderColor =
+          isSelected ? Colors.white : Colors.white.withValues(alpha: 0.4);
+      final borderThickness =
+          isSelected ? 2.0 : (showBorders ? 1.0 : 0.0);
+
+      for (final polyRaw in decoded) {
+        if (polyRaw is! List || polyRaw.isEmpty) continue;
+
+        // Lấy outer ring (index 0), bỏ qua holes
+        final outerRing = polyRaw[0];
+        if (outerRing is! List || outerRing.isEmpty) continue;
+
+        final List<LatLng> points = [];
+        for (final pt in outerRing) {
           if (pt is List && pt.length >= 2) {
-            points.add(LatLng(pt[1] as double, pt[0] as double)); // GeoJSON is Long/Lat
+            // FIX: lưu là [lat, lon] nên đọc đúng thứ tự
+            final lat = (pt[0] as num).toDouble();
+            final lon = (pt[1] as num).toDouble();
+            points.add(LatLng(lat, lon));
           }
         }
-        
+
         if (points.isNotEmpty) {
-           polygons.add(Polygon(
-             points: points,
-             color: fillColor,
-             borderColor: borderColor,
-             borderStrokeWidth: borderThickness,
-           ));
+          polygons.add(Polygon(
+            points: points,
+            color: fillColor,
+            borderColor: borderColor,
+            borderStrokeWidth: borderThickness,
+          ));
         }
-      } catch (e) {
-        // Fallback for complex MultiPolygon arrays
-        // This is a simplified approach. In a real scenario, you would recursively parse coordinates.
       }
+    } catch (e) {
+      debugPrint('Error parsing polygon for ${province.ma}: $e');
     }
   }
 
@@ -90,12 +105,11 @@ class MapViewScreen extends ConsumerWidget {
 
     final tileUrl = mapStyle == MapTileStyle.street
         ? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-        : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'; // Example satellite URL
+        : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 
     return Scaffold(
       body: Stack(
         children: [
-          // Flutter Map
           FlutterMap(
             mapController: mapController,
             options: MapOptions(
@@ -105,10 +119,6 @@ class MapViewScreen extends ConsumerWidget {
                 flags: InteractiveFlag.all,
               ),
               onTap: (tapPosition, point) {
-                // In a full implementation, you would do a point-in-polygon check here
-                // to find which province was clicked, then call:
-                // ref.read(selectedProvinceProvider.notifier).select(clickedMa);
-                // For now, clear selection if clicking outside
                 ref.read(selectedProvinceProvider.notifier).clear();
               },
             ),
@@ -119,32 +129,27 @@ class MapViewScreen extends ConsumerWidget {
               ),
               polygonsAsync.when(
                 data: (polygons) {
-                  // Re-animate when year changes
-                  return PolygonLayer(
-                    polygons: polygons,
-                  ).animate(key: ValueKey(selectedYear)).fadeIn(duration: 300.ms);
+                  return PolygonLayer(polygons: polygons)
+                      .animate(key: ValueKey(selectedYear))
+                      .fadeIn(duration: 300.ms);
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, s) => Center(child: Text('Error loading polygons: $e')),
+                loading: () =>
+                    const Center(child: CircularProgressIndicator()),
+                error: (e, s) =>
+                    Center(child: Text('Error loading polygons: $e')),
               ),
             ],
           ),
-
-          // Map Controls (Right side)
           const Positioned(
             right: 24,
             top: 24,
             child: MapControlsWidget(),
           ),
-
-          // Province Info Popup (Bottom Right, above timeline)
           const Positioned(
             right: 24,
-            bottom: 164, // Above the timeline panel
+            bottom: 164,
             child: ProvinceInfoPopup(),
           ),
-
-          // Timeline Panel (Bottom) is now managed by AppShell instead of here
         ],
       ),
     );

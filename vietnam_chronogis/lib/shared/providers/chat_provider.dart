@@ -5,6 +5,8 @@ import '../../data/repositories/chat_repository.dart';
 import '../../data/repositories/administrative_unit_repository.dart';
 import '../models/chat_message.dart';
 import '../models/chat_context.dart';
+// FIX: thêm import này để extension .label của VietnamEra vào scope
+import '../models/timeline_era.dart';
 import 'timeline_provider.dart';
 import 'map_provider.dart';
 
@@ -18,7 +20,7 @@ final currentChatContextProvider = FutureProvider<ChatContext>((ref) async {
   final era = ref.watch(currentEraProvider);
   final provinceCount = ref.watch(currentProvinceCountProvider);
   final selectedMa = ref.watch(selectedProvinceProvider);
-  
+
   String? embedText;
   if (selectedMa != null) {
     final repo = ref.watch(administrativeUnitRepositoryProvider);
@@ -31,6 +33,7 @@ final currentChatContextProvider = FutureProvider<ChatContext>((ref) async {
     selectedProvinceMa: selectedMa,
     selectedProvinceEmbedText: embedText,
     provinceCount: provinceCount,
+    // FIX: era.label sekarang in scope vì đã import timeline_era.dart
     currentEra: era.label,
   );
 });
@@ -41,21 +44,25 @@ final suggestedQuestionsProvider = FutureProvider<List<String>>((ref) async {
   return gemini.generateSuggestedQuestions(context);
 });
 
-final chatNotifierProvider = StateNotifierProvider<ChatNotifier, List<ChatMessage>>((ref) {
-  final gemini = ref.watch(geminiServiceProvider);
-  final repo = ref.watch(chatRepositoryProvider);
-  return ChatNotifier(gemini, repo, ref);
-});
+// FIX: StateNotifierProvider → NotifierProvider
+final chatNotifierProvider = NotifierProvider<ChatNotifier, List<ChatMessage>>(
+  ChatNotifier.new,
+);
 
-class ChatNotifier extends StateNotifier<List<ChatMessage>> {
-  final GeminiService _geminiService;
-  final ChatRepository _repository;
-  final Ref _ref;
+// FIX: StateNotifier<T> → Notifier<T>
+// - Không cần inject GeminiService, ChatRepository, Ref qua constructor nữa
+// - Dùng ref trực tiếp bên trong Notifier
+class ChatNotifier extends Notifier<List<ChatMessage>> {
+  late GeminiService _geminiService;
+  late ChatRepository _repository;
   final _uuid = const Uuid();
 
-  ChatNotifier(this._geminiService, this._repository, this._ref) : super([]) {
-    // Initial load from db stream is handled by chatMessagesProvider
-    // but we can hold temporary in-memory state here for streaming
+  @override
+  List<ChatMessage> build() {
+    // FIX: ref có sẵn, không cần super(initialState) constructor
+    _geminiService = ref.read(geminiServiceProvider);
+    _repository = ref.read(chatRepositoryProvider);
+    return [];
   }
 
   Future<void> sendMessage(String text) async {
@@ -68,11 +75,10 @@ class ChatNotifier extends StateNotifier<List<ChatMessage>> {
       timestamp: DateTime.now(),
     );
 
-    // Save user message to DB
     await _repository.saveMessage(userMessage);
 
     final aiMessageId = _uuid.v4();
-    var aiMessage = ChatMessage(
+    final aiMessage = ChatMessage(
       id: aiMessageId,
       role: MessageRole.assistant,
       content: '',
@@ -80,36 +86,32 @@ class ChatNotifier extends StateNotifier<List<ChatMessage>> {
       isStreaming: true,
     );
 
-    // Add empty AI message to local state for streaming UI
+    // FIX: state= trực tiếp trong Notifier (thay vì undefined 'state')
     state = [...state, aiMessage];
 
     try {
-      final chatContext = await _ref.read(currentChatContextProvider.future);
+      // FIX: dùng ref.read thay vì _ref.read
+      final chatContext = await ref.read(currentChatContextProvider.future);
       final stream = _geminiService.sendMessage(text, context: chatContext);
 
       String accumulatedContent = '';
-      
+
       await for (final chunk in stream) {
         accumulatedContent += chunk;
-        
-        // Update local state for streaming UI
         state = [
           ...state.where((m) => m.id != aiMessageId),
-          aiMessage.copyWith(content: accumulatedContent)
+          aiMessage.copyWith(content: accumulatedContent),
         ];
       }
 
-      // Finalize and save to DB
       final finalMessage = aiMessage.copyWith(
-        content: accumulatedContent, 
+        content: accumulatedContent,
         isStreaming: false,
       );
-      
-      state = state.where((m) => m.id != aiMessageId).toList(); // Remove temp stream message
-      await _repository.saveMessage(finalMessage); // DB will push via chatMessagesProvider
-      
+
+      state = state.where((m) => m.id != aiMessageId).toList();
+      await _repository.saveMessage(finalMessage);
     } catch (e) {
-      // Handle error
       state = state.where((m) => m.id != aiMessageId).toList();
       await _repository.saveMessage(
         ChatMessage(

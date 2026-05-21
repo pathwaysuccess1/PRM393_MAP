@@ -7,9 +7,7 @@ part 'timeline_provider.g.dart';
 @riverpod
 class SelectedYear extends _$SelectedYear {
   @override
-  int build() {
-    return 2025;
-  }
+  int build() => 2025;
 
   void setYear(int year) {
     if (year >= 1975 && year <= 2025) {
@@ -24,9 +22,7 @@ class IsPlaying extends _$IsPlaying {
 
   @override
   bool build() {
-    ref.onDispose(() {
-      _timer?.cancel();
-    });
+    ref.onDispose(() => _timer?.cancel());
     return false;
   }
 
@@ -58,33 +54,36 @@ class IsPlaying extends _$IsPlaying {
   }
 }
 
+// FIX: dùng Ref thay vì CurrentEraRef / CurrentProvinceCountRef
+// Riverpod generator v2 dùng Ref trực tiếp — các typed Ref như CurrentEraRef
+// chỉ tồn tại trong generated .g.dart, không cần khai báo trong source
 @riverpod
-VietnamEra currentEra(CurrentEraRef ref) {
+VietnamEra currentEra(Ref ref) {
   final year = ref.watch(selectedYearProvider);
   return VietnamEra.fromYear(year);
 }
 
 @riverpod
-int currentProvinceCount(CurrentProvinceCountRef ref) {
+int currentProvinceCount(Ref ref) {
   final year = ref.watch(selectedYearProvider);
   return getProvinceCountForYear(year);
 }
 
 int getProvinceCountForYear(int year) {
-  if (year == 1975) return 66; // approx
-  if (year >= 1976 && year < 1991) return 38; // After first consolidation
-  
+  if (year == 1975) return 66;
+  if (year >= 1976 && year < 1991) return 38;
+
   if (year >= 1991 && year < 1997) {
-    // Gradual splitting from 38 to 61
-    int base = 38;
-    int progress = year - 1991;
-    return base + (progress * 3); // rough approximation for the UI
+    // FIX: thêm curly braces — fix warning curly_braces_in_flow_control_structures
+    final int base = 38;
+    final int progress = year - 1991;
+    return base + (progress * 3);
   }
-  
+
   if (year >= 1997 && year < 2004) return 61;
-  if (year >= 2004 && year < 2008) return 64; // Dak Nong, Hau Giang, Dien Bien, Dak Lak split
-  if (year >= 2008 && year < 2025) return 63; // Ha Tay merged into Hanoi
-  if (year == 2025) return 34; // Resolution 202
-  
+  if (year >= 2004 && year < 2008) return 64;
+  if (year >= 2008 && year < 2025) return 63;
+  if (year == 2025) return 34;
+
   return 34;
 }

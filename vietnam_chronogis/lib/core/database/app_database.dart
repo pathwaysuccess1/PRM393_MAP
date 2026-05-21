@@ -4,7 +4,6 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import 'tables/administrative_units_table.dart';
@@ -42,9 +41,7 @@ class AppDatabase extends _$AppDatabase {
       onCreate: (Migrator m) async {
         await m.createAll();
       },
-      onUpgrade: (Migrator m, int from, int to) async {
-        // Handle database migrations here in the future
-      },
+      onUpgrade: (Migrator m, int from, int to) async {},
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
       },
@@ -55,16 +52,16 @@ class AppDatabase extends _$AppDatabase {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'vietnam_chronogis', 'chronogis.sqlite'));
-    
-    // Ensure the parent directory exists
+    final file = File(
+        p.join(dbFolder.path, 'vietnam_chronogis', 'chronogis.sqlite'));
+
     if (!await file.parent.exists()) {
       await file.parent.create(recursive: true);
     }
 
-    if (Platform.isAndroid) {
-      await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
-    }
+    // FIX: applyWorkaroundToOpenSqlite3OnOldAndroidVersions() đã bị xóa
+    // khỏi sqlite3_flutter_libs v0.6.0 — import cũng xóa theo
+    // (sqlite3_flutter_libs giờ tự handle workaround internally)
 
     final cachebase = (await getTemporaryDirectory()).path;
     sqlite3.tempDirectory = cachebase;

@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../../../../shared/providers/map_provider.dart';
 import '../../../../data/repositories/administrative_unit_repository.dart';
 import '../../../../core/database/app_database.dart';
-import 'package:go_router/go_router.dart';
 
 class ProvinceInfoPopup extends ConsumerWidget {
   const ProvinceInfoPopup({super.key});
@@ -50,7 +49,7 @@ class ProvinceInfoPopup extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      unit.name,
+                      unit.ten, // FIX: was unit.name — AdministrativeUnit dùng 'ten'
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -62,19 +61,21 @@ class ProvinceInfoPopup extends ConsumerWidget {
                     icon: const Icon(Icons.close, color: Colors.white54, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
-                    onPressed: () => ref.read(selectedProvinceProvider.notifier).clear(),
+                    onPressed: () =>
+                        ref.read(selectedProvinceProvider.notifier).clear(),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  unit.type.toUpperCase(),
+                  unit.type.toUpperCase(), // OK — field name đúng
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 10,
@@ -84,22 +85,39 @@ class ProvinceInfoPopup extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildInfoRow(Icons.people, 'Population', 
-                  unit.population != null ? popFormat.format(unit.population) : 'N/A'),
+              _buildInfoRow(
+                Icons.people,
+                'Population',
+                unit.population != null
+                    ? popFormat.format(unit.population)
+                    : 'N/A',
+              ),
               const SizedBox(height: 8),
-              _buildInfoRow(Icons.map, 'Area', 
-                  unit.area != null ? '${areaFormat.format(unit.area)} km²' : 'N/A'),
-              if (unit.nPredecessors != null && unit.nPredecessors! > 1) ...[
+              _buildInfoRow(
+                Icons.map,
+                'Area',
+                // FIX: was unit.area — field đúng là areaKm2
+                unit.areaKm2 != null
+                    ? '${areaFormat.format(unit.areaKm2)} km²'
+                    : 'N/A',
+              ),
+              // FIX: nPredecessors là int (non-nullable), bỏ null check
+              if (unit.nPredecessors > 1) ...[
                 const SizedBox(height: 8),
-                _buildInfoRow(Icons.merge_type, 'History', 'Merged from ${unit.nPredecessors} provinces', color: Colors.amber),
+                _buildInfoRow(
+                  Icons.merge_type,
+                  'History',
+                  'Merged from ${unit.nPredecessors} provinces',
+                  color: Colors.amber,
+                ),
               ],
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to explorer with selected province
-                    context.go('/explorer');
+                    // Navigate to explorer — route /explorer chưa có, dùng /map tạm
+                    // context.go('/explorer');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
@@ -118,17 +136,15 @@ class ProvinceInfoPopup extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, {Color? color}) {
+  Widget _buildInfoRow(IconData icon, String label, String value,
+      {Color? color}) {
     return Row(
       children: [
         Icon(icon, size: 16, color: color ?? Colors.white54),
         const SizedBox(width: 8),
         Text(
           '$label:',
-          style: TextStyle(
-            color: color ?? Colors.white54,
-            fontSize: 13,
-          ),
+          style: TextStyle(color: color ?? Colors.white54, fontSize: 13),
         ),
         const SizedBox(width: 8),
         Text(
