@@ -30,8 +30,12 @@ class AdministrativeUnitDao extends DatabaseAccessor<AppDatabase> with _$Adminis
         .get();
   }
 
-  Future<AdministrativeUnit?> getUnitByMa(String ma) {
-    return (select(administrativeUnits)..where((t) => t.ma.equals(ma))).getSingleOrNull();
+  Future<AdministrativeUnit?> getUnitByMa(String ma) async {
+    final list = await (select(administrativeUnits)
+          ..where((t) => t.ma.equals(ma))
+          ..limit(1))
+        .get();
+    return list.isNotEmpty ? list.first : null;
   }
 
   Future<List<AdministrativeUnit>> getProvincesByRegion(String region) {
@@ -40,11 +44,34 @@ class AdministrativeUnitDao extends DatabaseAccessor<AppDatabase> with _$Adminis
         .get();
   }
 
-  Future<List<AdministrativeUnit>> searchUnits(String query) {
-    return (select(administrativeUnits)
-          ..where((t) => t.ten.like('%$query%') | t.tenShort.like('%$query%'))
-          ..where((t) => t.kind.isIn(['province', 'commune']))
-          ..limit(10))
+  Future<List<AdministrativeUnit>> searchUnits(String query) async {
+    if (query.trim().isEmpty) return [];
+    
+    final allUnits = await (select(administrativeUnits)
+          ..where((t) => t.kind.isIn(['province', 'commune'])))
         .get();
+
+    final normalizedQuery = _normalizeVietnamese(query);
+
+    return allUnits.where((unit) {
+      final normalizedTen = _normalizeVietnamese(unit.ten);
+      final normalizedTenShort = _normalizeVietnamese(unit.tenShort);
+      return normalizedTen.contains(normalizedQuery) ||
+          normalizedTenShort.contains(normalizedQuery);
+    }).take(10).toList();
+  }
+
+  String _normalizeVietnamese(String input) {
+    var str = input.toLowerCase();
+    str = str.replaceAll(RegExp(r'[àáạảãâầấậẩẫăằắặẳẵ]'), 'a');
+    str = str.replaceAll(RegExp(r'[èéẹẻẽêềếệểễ]'), 'e');
+    str = str.replaceAll(RegExp(r'[ìíịỉĩ]'), 'i');
+    str = str.replaceAll(RegExp(r'[òóọỏõôồốộổỗơờớợởỡ]'), 'o');
+    str = str.replaceAll(RegExp(r'[ùúụủũưừứựửữ]'), 'u');
+    str = str.replaceAll(RegExp(r'[ỳýỵỷỹ]'), 'y');
+    str = str.replaceAll(RegExp(r'[đ]'), 'd');
+    // Remove extra spaces and punctuation
+    str = str.replaceAll(RegExp(r'[^a-z0-9 ]'), '');
+    return str.trim();
   }
 }

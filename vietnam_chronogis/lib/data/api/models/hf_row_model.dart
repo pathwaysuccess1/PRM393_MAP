@@ -4,7 +4,7 @@ part 'hf_row_model.freezed.dart';
 part 'hf_row_model.g.dart';
 
 @freezed
-class HfRowModel with _$HfRowModel {
+abstract class HfRowModel with _$HfRowModel {
   const factory HfRowModel({
     required String id,
     required String kind,
@@ -41,7 +41,7 @@ class HfRowModel with _$HfRowModel {
 }
 
 @freezed
-class HuggingFaceResponse with _$HuggingFaceResponse {
+abstract class HuggingFaceResponse with _$HuggingFaceResponse {
   const factory HuggingFaceResponse({
     required List<HuggingFaceRowWrapper> rows,
     @JsonKey(name: 'num_rows_total') required int numRowsTotal,
@@ -53,7 +53,7 @@ class HuggingFaceResponse with _$HuggingFaceResponse {
 }
 
 @freezed
-class HuggingFaceRowWrapper with _$HuggingFaceRowWrapper {
+abstract class HuggingFaceRowWrapper with _$HuggingFaceRowWrapper {
   const factory HuggingFaceRowWrapper({
     @JsonKey(name: 'row_idx') required int rowIdx,
     required HfRowModel row,

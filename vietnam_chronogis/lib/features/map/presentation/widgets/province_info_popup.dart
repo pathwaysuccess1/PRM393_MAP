@@ -57,12 +57,47 @@ class ProvinceInfoPopup extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white54, size: 20),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    onPressed: () =>
-                        ref.read(selectedProvinceProvider.notifier).clear(),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ref.watch(savedLocationsProvider).when(
+                            data: (savedCodes) {
+                              final isSaved = savedCodes.contains(unit.ma);
+                              return IconButton(
+                                icon: Icon(
+                                  isSaved
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_border,
+                                  color:
+                                      isSaved ? Colors.amber : Colors.white70,
+                                  size: 20,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () {
+                                  ref
+                                      .read(savedLocationsProvider.notifier)
+                                      .toggleSave(unit.ma);
+                                },
+                              );
+                            },
+                            loading: () => const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 1.5),
+                            ),
+                            error: (e, s) => const SizedBox.shrink(),
+                          ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.close,
+                            color: Colors.white54, size: 20),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () =>
+                            ref.read(selectedProvinceProvider.notifier).clear(),
+                      ),
+                    ],
                   ),
                 ],
               ),

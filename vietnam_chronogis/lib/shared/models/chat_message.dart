@@ -6,7 +6,7 @@ part 'chat_message.g.dart';
 enum MessageRole { user, assistant }
 
 @freezed
-class ChatMessage with _$ChatMessage {
+abstract class ChatMessage with _$ChatMessage {
   const factory ChatMessage({
     required String id,
     required MessageRole role,
@@ -15,5 +15,6 @@ class ChatMessage with _$ChatMessage {
     @Default(false) bool isStreaming,
   }) = _ChatMessage;
 
-  factory ChatMessage.fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
+  factory ChatMessage.fromJson(Map<String, dynamic> json) =>
+      _$ChatMessageFromJson(json);
 }

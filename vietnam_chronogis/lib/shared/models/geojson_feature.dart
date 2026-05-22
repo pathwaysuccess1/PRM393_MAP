@@ -4,7 +4,7 @@ part 'geojson_feature.freezed.dart';
 part 'geojson_feature.g.dart';
 
 @freezed
-class GeoJsonFeature with _$GeoJsonFeature {
+abstract class GeoJsonFeature with _$GeoJsonFeature {
   const factory GeoJsonFeature({
     required String type,
     required Map<String, dynamic> properties,
@@ -16,11 +16,14 @@ class GeoJsonFeature with _$GeoJsonFeature {
 }
 
 @freezed
-class Geometry with _$Geometry {
+abstract class Geometry with _$Geometry {
   const factory Geometry({
     required String type,
-    // Using dynamic because it can be List<dynamic> for Polygon or List<List<dynamic>> for MultiPolygon
-    required dynamic coordinates, 
+    // FIX: dynamic → List<dynamic>
+    // json_serializable không generate được cho 'dynamic' thuần túy.
+    // GeoJSON coordinates luôn là List (Polygon hoặc MultiPolygon),
+    // nên List<dynamic> là đúng và serializable.
+    required List<dynamic> coordinates,
   }) = _Geometry;
 
   factory Geometry.fromJson(Map<String, dynamic> json) =>
@@ -28,7 +31,7 @@ class Geometry with _$Geometry {
 }
 
 @freezed
-class FeatureCollection with _$FeatureCollection {
+abstract class FeatureCollection with _$FeatureCollection {
   const factory FeatureCollection({
     required String type,
     required List<GeoJsonFeature> features,

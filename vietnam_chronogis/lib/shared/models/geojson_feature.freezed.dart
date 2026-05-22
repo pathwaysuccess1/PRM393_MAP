@@ -308,7 +308,7 @@ $GeometryCopyWith<$Res> get geometry {
 /// @nodoc
 mixin _$Geometry {
 
- String get type; dynamic get coordinates;
+ String get type; List<dynamic> get coordinates;
 /// Create a copy of Geometry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -341,7 +341,7 @@ abstract mixin class $GeometryCopyWith<$Res>  {
   factory $GeometryCopyWith(Geometry value, $Res Function(Geometry) _then) = _$GeometryCopyWithImpl;
 @useResult
 $Res call({
- String type, dynamic coordinates
+ String type, List<dynamic> coordinates
 });
 
 
@@ -358,11 +358,11 @@ class _$GeometryCopyWithImpl<$Res>
 
 /// Create a copy of Geometry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? coordinates = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? coordinates = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as List<dynamic>,
   ));
 }
 
@@ -447,7 +447,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  dynamic coordinates)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String type,  List<dynamic> coordinates)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Geometry() when $default != null:
 return $default(_that.type,_that.coordinates);case _:
@@ -468,7 +468,7 @@ return $default(_that.type,_that.coordinates);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  dynamic coordinates)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String type,  List<dynamic> coordinates)  $default,) {final _that = this;
 switch (_that) {
 case _Geometry():
 return $default(_that.type,_that.coordinates);case _:
@@ -488,7 +488,7 @@ return $default(_that.type,_that.coordinates);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  dynamic coordinates)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String type,  List<dynamic> coordinates)?  $default,) {final _that = this;
 switch (_that) {
 case _Geometry() when $default != null:
 return $default(_that.type,_that.coordinates);case _:
@@ -503,11 +503,17 @@ return $default(_that.type,_that.coordinates);case _:
 @JsonSerializable()
 
 class _Geometry implements Geometry {
-  const _Geometry({required this.type, required this.coordinates});
+  const _Geometry({required this.type, required final  List<dynamic> coordinates}): _coordinates = coordinates;
   factory _Geometry.fromJson(Map<String, dynamic> json) => _$GeometryFromJson(json);
 
 @override final  String type;
-@override final  dynamic coordinates;
+ final  List<dynamic> _coordinates;
+@override List<dynamic> get coordinates {
+  if (_coordinates is EqualUnmodifiableListView) return _coordinates;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_coordinates);
+}
+
 
 /// Create a copy of Geometry
 /// with the given fields replaced by the non-null parameter values.
@@ -522,12 +528,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Geometry&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.coordinates, coordinates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Geometry&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._coordinates, _coordinates));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(coordinates));
+int get hashCode => Object.hash(runtimeType,type,const DeepCollectionEquality().hash(_coordinates));
 
 @override
 String toString() {
@@ -542,7 +548,7 @@ abstract mixin class _$GeometryCopyWith<$Res> implements $GeometryCopyWith<$Res>
   factory _$GeometryCopyWith(_Geometry value, $Res Function(_Geometry) _then) = __$GeometryCopyWithImpl;
 @override @useResult
 $Res call({
- String type, dynamic coordinates
+ String type, List<dynamic> coordinates
 });
 
 
@@ -559,11 +565,11 @@ class __$GeometryCopyWithImpl<$Res>
 
 /// Create a copy of Geometry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? coordinates = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? coordinates = null,}) {
   return _then(_Geometry(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as String,coordinates: null == coordinates ? _self._coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as List<dynamic>,
   ));
 }
 

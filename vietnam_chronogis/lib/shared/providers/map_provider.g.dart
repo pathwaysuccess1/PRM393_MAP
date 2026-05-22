@@ -165,6 +165,58 @@ abstract class _$ShowBordersState extends $Notifier<bool> {
   }
 }
 
+@ProviderFor(ShowHeatmapState)
+final showHeatmapStateProvider = ShowHeatmapStateProvider._();
+
+final class ShowHeatmapStateProvider
+    extends $NotifierProvider<ShowHeatmapState, bool> {
+  ShowHeatmapStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'showHeatmapStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$showHeatmapStateHash();
+
+  @$internal
+  @override
+  ShowHeatmapState create() => ShowHeatmapState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$showHeatmapStateHash() => r'0b4873ca21201a97668123e617429c58295736f4';
+
+abstract class _$ShowHeatmapState extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(MapControllerState)
 final mapControllerStateProvider = MapControllerStateProvider._();
 

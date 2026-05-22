@@ -40,7 +40,7 @@ final class SelectedYearProvider extends $NotifierProvider<SelectedYear, int> {
   }
 }
 
-String _$selectedYearHash() => r'f2a42af2a07115d30812eeeea793154ab2c81b6e';
+String _$selectedYearHash() => r'3fa8ec555bef35746b26b4014f2ab4a59996b479';
 
 abstract class _$SelectedYear extends $Notifier<int> {
   int build();
@@ -91,7 +91,7 @@ final class IsPlayingProvider extends $NotifierProvider<IsPlaying, bool> {
   }
 }
 
-String _$isPlayingHash() => r'4f9a8730fa26d135ab583c91d71eb799fd447fed';
+String _$isPlayingHash() => r'9aabd95b7db02e0fc7c0ddc14e3e61952efbb8e7';
 
 abstract class _$IsPlaying extends $Notifier<bool> {
   bool build();
@@ -150,7 +150,7 @@ final class CurrentEraProvider
   }
 }
 
-String _$currentEraHash() => r'9a939e7edc883600c117587d549aff18f0b01cc6';
+String _$currentEraHash() => r'83429eaae29cae3e2318f32f1cce8dc689716834';
 
 @ProviderFor(currentProvinceCount)
 final currentProvinceCountProvider = CurrentProvinceCountProvider._();
@@ -192,4 +192,4 @@ final class CurrentProvinceCountProvider
 }
 
 String _$currentProvinceCountHash() =>
-    r'71e543268c596c84c93e8a5790f5ea9f8078bbea';
+    r'd78f4ad5e5ba1d31175e1efb239848c7f526332e';

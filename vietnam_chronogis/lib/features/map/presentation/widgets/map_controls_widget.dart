@@ -14,6 +14,7 @@ class MapControlsWidget extends ConsumerWidget {
     final isSatellite =
         ref.watch(mapTileStyleStateProvider) == MapTileStyle.satellite;
     final showBorders = ref.watch(showBordersStateProvider);
+    final showHeatmap = ref.watch(showHeatmapStateProvider);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -56,6 +57,13 @@ class MapControlsWidget extends ConsumerWidget {
           tooltip: 'Toggle Borders',
           onPressed: () => ref.read(showBordersStateProvider.notifier).toggle(),
         ),
+        const SizedBox(height: 8),
+        _buildButton(
+          icon: Icons.local_fire_department,
+          tooltip: 'Toggle Heatmap (Density)',
+          iconColor: showHeatmap ? Colors.orange : Colors.white70,
+          onPressed: () => ref.read(showHeatmapStateProvider.notifier).toggle(),
+        ),
       ],
     );
   }
@@ -64,6 +72,7 @@ class MapControlsWidget extends ConsumerWidget {
     required IconData icon,
     required String tooltip,
     required VoidCallback onPressed,
+    Color iconColor = Colors.white70,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -79,7 +88,7 @@ class MapControlsWidget extends ConsumerWidget {
         ],
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.white70),
+        icon: Icon(icon, color: iconColor),
         tooltip: tooltip,
         onPressed: onPressed,
       ),

@@ -1,4 +1,4 @@
-name: map_application1
+name: vietnam_chronogis
 description: "Vietnam ChronoGIS - Bản đồ lịch sử hành chính Việt Nam"
 publish_to: 'none'
 
@@ -6,61 +6,43 @@ version: 1.0.0+1
 
 environment:
   sdk: ^3.12.0
-
+ 
 dependencies:
   flutter:
     sdk: flutter
-
   cupertino_icons: ^1.0.8
-
-  # Database
-  drift: any
-  path_provider: any
-  path: any
-  sqlite3_flutter_libs: any
-  sqlite3: any
-
-  # Navigation
-  go_router: any
-
-  # UI
-  google_fonts: any
-  flutter_riverpod: any
-  riverpod_annotation: any
-  shared_preferences: any
-
-  # AI / API
-  google_generative_ai: any
-  dio: any
-
-  # Models
-  freezed_annotation: any
-  json_annotation: ^4.12.0   # FIX: required by json_serializable at runtime
-
-  # Map
-  latlong2: any
-  flutter_animate: any
-  flutter_map: any
-
-  # Utils
-  intl: any
-  window_manager: any
-  uuid: any
-
+  drift: ^2.33.0
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  sqlite3_flutter_libs: ^0.6.0
+  sqlite3: ^3.3.1
+  go_router: ^17.2.3
+  google_fonts: ^8.1.0
+  flutter_riverpod: ^3.3.1
+  riverpod_annotation: ^4.0.2
+  shared_preferences: ^2.5.5
+  google_generative_ai: ^0.4.7
+  dio: ^5.9.2
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
+  latlong2: ^0.9.1
+  flutter_animate: ^4.5.2
+  flutter_map: ^8.3.0
+  intl: ^0.20.2
+  window_manager: ^0.5.1
+  uuid: ^4.5.3
+ 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-
-  # ===== CODE GENERATORS (root cause của 200+ lỗi import) =====
-  build_runner: any          # runner chạy tất cả generators
-  drift_dev: any             # generate *.g.dart cho Drift DAO/Database
-  freezed: any               # generate *.freezed.dart cho @freezed models
-  json_serializable: any     # generate *.g.dart cho @JsonSerializable
-  riverpod_generator: any    # generate *.g.dart cho @riverpod providers
-
+  build_runner: ^2.4.0
+  drift_dev: ^2.33.0
+  freezed: ^3.1.0
+  json_serializable: ^6.8.0
+  riverpod_generator: ^4.0.2
+ 
 flutter:
   uses-material-design: true
-
   assets:
-    - assets/geojson/          # Thêm asset folder cho gadm41_VNM_1.json
+    - assets/geojson/

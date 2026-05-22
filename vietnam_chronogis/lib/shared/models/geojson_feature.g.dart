@@ -20,8 +20,10 @@ Map<String, dynamic> _$GeoJsonFeatureToJson(_GeoJsonFeature instance) =>
       'geometry': instance.geometry,
     };
 
-_Geometry _$GeometryFromJson(Map<String, dynamic> json) =>
-    _Geometry(type: json['type'] as String, coordinates: json['coordinates']);
+_Geometry _$GeometryFromJson(Map<String, dynamic> json) => _Geometry(
+  type: json['type'] as String,
+  coordinates: json['coordinates'] as List<dynamic>,
+);
 
 Map<String, dynamic> _$GeometryToJson(_Geometry instance) => <String, dynamic>{
   'type': instance.type,

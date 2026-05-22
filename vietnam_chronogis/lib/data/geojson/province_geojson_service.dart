@@ -19,6 +19,25 @@ class ProvinceGeoJsonService {
       final featureCollection = await _parser.parseFromAssets('assets/geojson/gadm41_VNM_1.json');
       final provinces = await _unitDao.getAllProvinces();
 
+      // ── BƯỚC A (MỚI): Lưu từng tỉnh GADM riêng lẻ với key "gadm_<NAME_1>" ──
+      // Dùng cho bản đồ lịch sử trước 2025 (63 tỉnh thành cũ)
+      for (final feature in featureCollection.features) {
+        final name1 = (feature.properties['NAME_1'] as String?) ?? '';
+        if (name1.isEmpty) continue;
+        final coords = GeoJsonParser.extractCoordinates(feature.geometry);
+        final jsonStr = jsonEncode(
+          coords
+              .map((poly) => poly
+                  .map((ring) =>
+                      ring.map((pt) => [pt.latitude, pt.longitude]).toList())
+                  .toList())
+              .toList(),
+        );
+        await _geoJsonDao.cacheGeoJson('gadm_$name1', jsonStr);
+        debugPrint('Cached GADM province: gadm_$name1');
+      }
+
+      // ── BƯỚC B (GIỮ NGUYÊN): Gộp GADM → 34 tỉnh HF ──
       for (var feature in featureCollection.features) {
         String name1 = feature.properties['NAME_1'] ?? '';
         final normalizedGadmName = _normalizeName(name1);

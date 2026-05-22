@@ -4,7 +4,7 @@ part 'chat_context.freezed.dart';
 part 'chat_context.g.dart';
 
 @freezed
-class ChatContext with _$ChatContext {
+abstract class ChatContext with _$ChatContext {
   const factory ChatContext({
     required int currentYear,
     String? selectedProvinceMa,
@@ -13,5 +13,6 @@ class ChatContext with _$ChatContext {
     required String currentEra,
   }) = _ChatContext;
 
-  factory ChatContext.fromJson(Map<String, dynamic> json) => _$ChatContextFromJson(json);
+  factory ChatContext.fromJson(Map<String, dynamic> json) =>
+      _$ChatContextFromJson(json);
 }
