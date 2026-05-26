@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 import '../../../../shared/providers/map_provider.dart';
+import '../../../../shared/providers/routing_provider.dart';
 import '../../../../data/repositories/administrative_unit_repository.dart';
 import '../../../../core/database/app_database.dart';
 
@@ -23,6 +25,13 @@ class ProvinceInfoPopup extends ConsumerWidget {
         final unit = snapshot.data!;
         final popFormat = NumberFormat.compact(locale: 'vi_VN');
         final areaFormat = NumberFormat('#,##0.##', 'vi_VN');
+        final density =
+            unit.density ??
+            ((unit.population != null &&
+                    unit.areaKm2 != null &&
+                    unit.areaKm2! > 0)
+                ? unit.population! / unit.areaKm2!
+                : null);
 
         return Container(
           width: 300,
@@ -60,7 +69,9 @@ class ProvinceInfoPopup extends ConsumerWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ref.watch(savedLocationsProvider).when(
+                      ref
+                          .watch(savedLocationsProvider)
+                          .when(
                             data: (savedCodes) {
                               final isSaved = savedCodes.contains(unit.ma);
                               return IconButton(
@@ -68,8 +79,9 @@ class ProvinceInfoPopup extends ConsumerWidget {
                                   isSaved
                                       ? Icons.bookmark
                                       : Icons.bookmark_border,
-                                  color:
-                                      isSaved ? Colors.amber : Colors.white70,
+                                  color: isSaved
+                                      ? Colors.amber
+                                      : Colors.white70,
                                   size: 20,
                                 ),
                                 padding: EdgeInsets.zero,
@@ -84,14 +96,19 @@ class ProvinceInfoPopup extends ConsumerWidget {
                             loading: () => const SizedBox(
                               width: 20,
                               height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 1.5),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                              ),
                             ),
                             error: (e, s) => const SizedBox.shrink(),
                           ),
                       const SizedBox(width: 8),
                       IconButton(
-                        icon: const Icon(Icons.close,
-                            color: Colors.white54, size: 20),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white54,
+                          size: 20,
+                        ),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         onPressed: () =>
@@ -103,8 +120,7 @@ class ProvinceInfoPopup extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -136,6 +152,15 @@ class ProvinceInfoPopup extends ConsumerWidget {
                     ? '${areaFormat.format(unit.areaKm2)} km²'
                     : 'N/A',
               ),
+              const SizedBox(height: 8),
+              _buildInfoRow(
+                Icons.local_fire_department,
+                'Density',
+                density != null
+                    ? '${areaFormat.format(density)} people/km²'
+                    : 'N/A',
+                color: const Color(0xFFFF8A65),
+              ),
               // FIX: nPredecessors là int (non-nullable), bỏ null check
               if (unit.nPredecessors > 1) ...[
                 const SizedBox(height: 8),
@@ -147,23 +172,81 @@ class ProvinceInfoPopup extends ConsumerWidget {
                 ),
               ],
               const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to explorer — route /explorer chưa có, dùng /map tạm
-                    // context.go('/explorer');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              if (unit.centroidLat != null && unit.centroidLon != null) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final mapController = ref.read(
+                            mapControllerStateProvider,
+                          );
+                          final currentStart = ref.read(
+                            routeStartPointProvider,
+                          );
+                          if (currentStart == null) {
+                            ref
+                                .read(routeStartPointProvider.notifier)
+                                .updatePoint(mapController.camera.center);
+                          }
+                          ref
+                              .read(routeEndPointProvider.notifier)
+                              .updatePoint(
+                                LatLng(unit.centroidLat!, unit.centroidLon!),
+                              );
+                          ref
+                              .read(isRoutingModeProvider.notifier)
+                              .updateMode(true);
+                          ref.read(selectedProvinceProvider.notifier).clear();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1D9E75),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text('Directions'),
+                      ),
                     ),
-                  ),
-                  child: const Text('Xem chi tiết'),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Navigate to explorer — route /explorer chưa có, dùng /map tạm
+                          // context.go('/explorer');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text('Xem chi tiết'),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              ] else ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigate to explorer — route /explorer chưa có, dùng /map tạm
+                      // context.go('/explorer');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Xem chi tiết'),
+                  ),
+                ),
+              ],
             ],
           ),
         );
@@ -171,8 +254,12 @@ class ProvinceInfoPopup extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value,
-      {Color? color}) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String label,
+    String value, {
+    Color? color,
+  }) {
     return Row(
       children: [
         Icon(icon, size: 16, color: color ?? Colors.white54),

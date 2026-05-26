@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import '../../map/presentation/map_view_screen.dart';
+import '../../explorer/presentation/explorer_screen.dart';
 import '../../map/presentation/widgets/timeline_panel.dart';
 import '../../ai_chat/presentation/ai_insights_screen.dart';
 
@@ -17,8 +18,7 @@ class SelectedTab extends Notifier<int> {
   void select(int index) => state = index;
 }
 
-final selectedTabProvider =
-    NotifierProvider<SelectedTab, int>(SelectedTab.new);
+final selectedTabProvider = NotifierProvider<SelectedTab, int>(SelectedTab.new);
 
 class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key});
@@ -45,9 +45,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                   width: isSidebarExpanded ? 280 : 0,
                   child: const SidebarWidget(),
                 ),
-                Expanded(
-                  child: _buildMainContent(selectedTab),
-                ),
+                Expanded(child: _buildMainContent(selectedTab)),
               ],
             ),
           ),
@@ -69,11 +67,17 @@ class _AppShellState extends ConsumerState<AppShell> {
       destinations: const [
         NavigationRailDestination(icon: Icon(Icons.map), label: Text('Map')),
         NavigationRailDestination(
-            icon: Icon(Icons.explore), label: Text('Explorer')),
+          icon: Icon(Icons.explore),
+          label: Text('Explorer'),
+        ),
         NavigationRailDestination(
-            icon: Icon(Icons.book), label: Text('Archives')),
+          icon: Icon(Icons.book),
+          label: Text('Archives'),
+        ),
         NavigationRailDestination(
-            icon: Icon(Icons.smart_toy), label: Text('AI')),
+          icon: Icon(Icons.smart_toy),
+          label: Text('AI'),
+        ),
       ],
     );
   }
@@ -83,7 +87,7 @@ class _AppShellState extends ConsumerState<AppShell> {
       index: selectedTab,
       children: const [
         MapViewScreen(),
-        Center(child: Text('Explorer Placeholder')),
+        ExplorerScreen(),
         Center(child: Text('Archives Placeholder')),
         AiInsightsScreen(),
       ],
@@ -123,7 +127,9 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
     }
 
     final searchResultsAsync = ref.watch(mapSearchResultsProvider);
-    final savedAdministrativeUnitsAsync = ref.watch(savedAdministrativeUnitsProvider);
+    final savedAdministrativeUnitsAsync = ref.watch(
+      savedAdministrativeUnitsProvider,
+    );
 
     return Container(
       color: const Color(0xFF1A1D23),
@@ -135,9 +141,9 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
             child: Text(
               'Administrative Search',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Padding(
@@ -152,16 +158,24 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
                 TextStyle(color: Colors.white, fontSize: 14),
               ),
               backgroundColor: const WidgetStatePropertyAll(Color(0xFF12151C)),
-              leading: const Icon(Icons.search, color: Colors.white54, size: 20),
+              leading: const Icon(
+                Icons.search,
+                color: Colors.white54,
+                size: 20,
+              ),
               trailing: [
                 if (searchQuery.isNotEmpty)
                   IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.white54, size: 18),
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.white54,
+                      size: 18,
+                    ),
                     onPressed: () {
                       ref.read(mapSearchQueryProvider.notifier).updateQuery('');
                       _searchController.clear();
                     },
-                  )
+                  ),
               ],
               onChanged: (value) {
                 ref.read(mapSearchQueryProvider.notifier).updateQuery(value);
@@ -200,7 +214,9 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
     );
   }
 
-  Widget _buildSearchResults(AsyncValue<List<AdministrativeUnit>> resultsAsync) {
+  Widget _buildSearchResults(
+    AsyncValue<List<AdministrativeUnit>> resultsAsync,
+  ) {
     return resultsAsync.when(
       data: (results) {
         if (results.isEmpty) {
@@ -239,7 +255,9 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
     );
   }
 
-  Widget _buildSavedLocations(AsyncValue<List<AdministrativeUnit>> savedUnitsAsync) {
+  Widget _buildSavedLocations(
+    AsyncValue<List<AdministrativeUnit>> savedUnitsAsync,
+  ) {
     return savedUnitsAsync.when(
       data: (savedUnits) {
         if (savedUnits.isEmpty) {
@@ -285,9 +303,8 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
           ],
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
+      loading: () =>
+          const Center(child: CircularProgressIndicator(strokeWidth: 2)),
       error: (e, s) => const SizedBox.shrink(),
     );
   }
@@ -298,18 +315,26 @@ class _SidebarWidgetState extends ConsumerState<SidebarWidget> {
       title: Text(
         unit.ten,
         style: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
       ),
       subtitle: Text(
         unit.type.toUpperCase(),
         style: const TextStyle(color: Colors.white38, fontSize: 11),
       ),
-      leading: const Icon(Icons.location_on_outlined,
-          color: Colors.white54, size: 20),
+      leading: const Icon(
+        Icons.location_on_outlined,
+        color: Colors.white54,
+        size: 20,
+      ),
       onTap: () {
         ref.read(selectedProvinceProvider.notifier).select(unit.ma);
         if (unit.centroidLat != null && unit.centroidLon != null) {
-          ref.read(mapControllerStateProvider).move(
+          ref
+              .read(mapControllerStateProvider)
+              .move(
                 LatLng(unit.centroidLat!, unit.centroidLon!),
                 unit.kind == 'commune' ? 12.0 : 8.5,
               );

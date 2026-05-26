@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// FIX: bỏ import flutter_map — không dùng trực tiếp trong file này
-// import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+
 import '../../../../shared/providers/map_provider.dart';
 
 class MapControlsWidget extends ConsumerWidget {
@@ -18,6 +17,7 @@ class MapControlsWidget extends ConsumerWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         _buildButton(
           icon: Icons.add,
@@ -40,9 +40,7 @@ class MapControlsWidget extends ConsumerWidget {
         _buildButton(
           icon: Icons.crop_free,
           tooltip: 'Fit Vietnam',
-          onPressed: () {
-            mapController.move(const LatLng(16.0, 106.0), 5.5);
-          },
+          onPressed: () => mapController.move(const LatLng(16.0, 106.0), 5.5),
         ),
         const SizedBox(height: 24),
         _buildButton(
@@ -58,13 +56,62 @@ class MapControlsWidget extends ConsumerWidget {
           onPressed: () => ref.read(showBordersStateProvider.notifier).toggle(),
         ),
         const SizedBox(height: 8),
-        _buildButton(
-          icon: Icons.local_fire_department,
-          tooltip: 'Toggle Heatmap (Density)',
-          iconColor: showHeatmap ? Colors.orange : Colors.white70,
-          onPressed: () => ref.read(showHeatmapStateProvider.notifier).toggle(),
-        ),
+        _buildHeatmapButton(showHeatmap, () {
+          debugPrint('Heatmap toggle clicked: $showHeatmap -> ${!showHeatmap}');
+          ref.read(showHeatmapStateProvider.notifier).toggle();
+        }),
       ],
+    );
+  }
+
+  Widget _buildHeatmapButton(bool isActive, VoidCallback onPressed) {
+    return Tooltip(
+      message: 'Toggle Population Heatmap',
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 132,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive
+                ? const Color(0xFFFF7043).withValues(alpha: 0.95)
+                : const Color(0xFF1A1D23).withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isActive
+                  ? const Color(0xFFFFCCBC)
+                  : Colors.white.withValues(alpha: 0.1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.local_fire_department,
+                color: isActive ? Colors.white : Colors.white70,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                isActive ? 'Heatmap ON' : 'Heatmap',
+                style: TextStyle(
+                  color: isActive ? Colors.white : Colors.white70,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

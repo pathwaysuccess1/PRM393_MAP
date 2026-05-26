@@ -2573,6 +2573,1003 @@ class ChatHistoryMessagesCompanion extends UpdateCompanion<ChatHistoryMessage> {
   }
 }
 
+class $TourismPlacesTable extends TourismPlaces
+    with TableInfo<$TourismPlacesTable, TourismPlace> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TourismPlacesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _osmIdMeta = const VerificationMeta('osmId');
+  @override
+  late final GeneratedColumn<int> osmId = GeneratedColumn<int>(
+    'osm_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameEnMeta = const VerificationMeta('nameEn');
+  @override
+  late final GeneratedColumn<String> nameEn = GeneratedColumn<String>(
+    'name_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameZhMeta = const VerificationMeta('nameZh');
+  @override
+  late final GeneratedColumn<String> nameZh = GeneratedColumn<String>(
+    'name_zh',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _latMeta = const VerificationMeta('lat');
+  @override
+  late final GeneratedColumn<double> lat = GeneratedColumn<double>(
+    'lat',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lonMeta = const VerificationMeta('lon');
+  @override
+  late final GeneratedColumn<double> lon = GeneratedColumn<double>(
+    'lon',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wikiSummaryMeta = const VerificationMeta(
+    'wikiSummary',
+  );
+  @override
+  late final GeneratedColumn<String> wikiSummary = GeneratedColumn<String>(
+    'wiki_summary',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _thumbnailUrlMeta = const VerificationMeta(
+    'thumbnailUrl',
+  );
+  @override
+  late final GeneratedColumn<String> thumbnailUrl = GeneratedColumn<String>(
+    'thumbnail_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _websiteMeta = const VerificationMeta(
+    'website',
+  );
+  @override
+  late final GeneratedColumn<String> website = GeneratedColumn<String>(
+    'website',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _openingHoursMeta = const VerificationMeta(
+    'openingHours',
+  );
+  @override
+  late final GeneratedColumn<String> openingHours = GeneratedColumn<String>(
+    'opening_hours',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wikidataMeta = const VerificationMeta(
+    'wikidata',
+  );
+  @override
+  late final GeneratedColumn<String> wikidata = GeneratedColumn<String>(
+    'wikidata',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wikipediaMeta = const VerificationMeta(
+    'wikipedia',
+  );
+  @override
+  late final GeneratedColumn<String> wikipedia = GeneratedColumn<String>(
+    'wikipedia',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _provinceMaMeta = const VerificationMeta(
+    'provinceMa',
+  );
+  @override
+  late final GeneratedColumn<String> provinceMa = GeneratedColumn<String>(
+    'province_ma',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wikiLastFetchedMeta = const VerificationMeta(
+    'wikiLastFetched',
+  );
+  @override
+  late final GeneratedColumn<DateTime> wikiLastFetched =
+      GeneratedColumn<DateTime>(
+        'wiki_last_fetched',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    osmId,
+    name,
+    nameEn,
+    nameZh,
+    category,
+    lat,
+    lon,
+    description,
+    wikiSummary,
+    thumbnailUrl,
+    website,
+    openingHours,
+    phone,
+    wikidata,
+    wikipedia,
+    provinceMa,
+    wikiLastFetched,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tourism_places';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TourismPlace> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('osm_id')) {
+      context.handle(
+        _osmIdMeta,
+        osmId.isAcceptableOrUnknown(data['osm_id']!, _osmIdMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('name_en')) {
+      context.handle(
+        _nameEnMeta,
+        nameEn.isAcceptableOrUnknown(data['name_en']!, _nameEnMeta),
+      );
+    }
+    if (data.containsKey('name_zh')) {
+      context.handle(
+        _nameZhMeta,
+        nameZh.isAcceptableOrUnknown(data['name_zh']!, _nameZhMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryMeta);
+    }
+    if (data.containsKey('lat')) {
+      context.handle(
+        _latMeta,
+        lat.isAcceptableOrUnknown(data['lat']!, _latMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_latMeta);
+    }
+    if (data.containsKey('lon')) {
+      context.handle(
+        _lonMeta,
+        lon.isAcceptableOrUnknown(data['lon']!, _lonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lonMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wiki_summary')) {
+      context.handle(
+        _wikiSummaryMeta,
+        wikiSummary.isAcceptableOrUnknown(
+          data['wiki_summary']!,
+          _wikiSummaryMeta,
+        ),
+      );
+    }
+    if (data.containsKey('thumbnail_url')) {
+      context.handle(
+        _thumbnailUrlMeta,
+        thumbnailUrl.isAcceptableOrUnknown(
+          data['thumbnail_url']!,
+          _thumbnailUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('website')) {
+      context.handle(
+        _websiteMeta,
+        website.isAcceptableOrUnknown(data['website']!, _websiteMeta),
+      );
+    }
+    if (data.containsKey('opening_hours')) {
+      context.handle(
+        _openingHoursMeta,
+        openingHours.isAcceptableOrUnknown(
+          data['opening_hours']!,
+          _openingHoursMeta,
+        ),
+      );
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    }
+    if (data.containsKey('wikidata')) {
+      context.handle(
+        _wikidataMeta,
+        wikidata.isAcceptableOrUnknown(data['wikidata']!, _wikidataMeta),
+      );
+    }
+    if (data.containsKey('wikipedia')) {
+      context.handle(
+        _wikipediaMeta,
+        wikipedia.isAcceptableOrUnknown(data['wikipedia']!, _wikipediaMeta),
+      );
+    }
+    if (data.containsKey('province_ma')) {
+      context.handle(
+        _provinceMaMeta,
+        provinceMa.isAcceptableOrUnknown(data['province_ma']!, _provinceMaMeta),
+      );
+    }
+    if (data.containsKey('wiki_last_fetched')) {
+      context.handle(
+        _wikiLastFetchedMeta,
+        wikiLastFetched.isAcceptableOrUnknown(
+          data['wiki_last_fetched']!,
+          _wikiLastFetchedMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {osmId};
+  @override
+  TourismPlace map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TourismPlace(
+      osmId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}osm_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      nameEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_en'],
+      ),
+      nameZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_zh'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      lat: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}lat'],
+      )!,
+      lon: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}lon'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      wikiSummary: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wiki_summary'],
+      ),
+      thumbnailUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}thumbnail_url'],
+      ),
+      website: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}website'],
+      ),
+      openingHours: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}opening_hours'],
+      ),
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      ),
+      wikidata: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wikidata'],
+      ),
+      wikipedia: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wikipedia'],
+      ),
+      provinceMa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}province_ma'],
+      ),
+      wikiLastFetched: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}wiki_last_fetched'],
+      ),
+    );
+  }
+
+  @override
+  $TourismPlacesTable createAlias(String alias) {
+    return $TourismPlacesTable(attachedDatabase, alias);
+  }
+}
+
+class TourismPlace extends DataClass implements Insertable<TourismPlace> {
+  /// OSM element ID — primary key
+  final int osmId;
+
+  /// Tên tiếng Việt (name tag trong OSM)
+  final String name;
+
+  /// Tên tiếng Anh (name:en)
+  final String? nameEn;
+
+  /// Tên tiếng Trung (name:zh) — hữu ích cho khách Trung
+  final String? nameZh;
+
+  /// Category: 'attraction' | 'museum' | 'beach' | 'ruins' |
+  ///           'temple' | 'nationalPark' | 'viewpoint' | 'worldHeritage'
+  final String category;
+
+  /// Latitude
+  final double lat;
+
+  /// Longitude
+  final double lon;
+
+  /// Mô tả từ OSM (description tag)
+  final String? description;
+
+  /// Mô tả tiếng Anh từ Wikipedia (cache sau khi fetch)
+  final String? wikiSummary;
+
+  /// URL ảnh thumbnail từ Wikipedia
+  final String? thumbnailUrl;
+
+  /// Website chính thức
+  final String? website;
+
+  /// Giờ mở cửa (opening_hours tag)
+  final String? openingHours;
+
+  /// Số điện thoại
+  final String? phone;
+
+  /// Wikidata QID (VD: "Q106400" cho Vịnh Hạ Long)
+  final String? wikidata;
+
+  /// Wikipedia page title tiếng Anh
+  final String? wikipedia;
+
+  /// Mã tỉnh liên kết (ma từ administrative_units)
+  final String? provinceMa;
+
+  /// Timestamp lần cuối fetch Wikipedia summary
+  final DateTime? wikiLastFetched;
+  const TourismPlace({
+    required this.osmId,
+    required this.name,
+    this.nameEn,
+    this.nameZh,
+    required this.category,
+    required this.lat,
+    required this.lon,
+    this.description,
+    this.wikiSummary,
+    this.thumbnailUrl,
+    this.website,
+    this.openingHours,
+    this.phone,
+    this.wikidata,
+    this.wikipedia,
+    this.provinceMa,
+    this.wikiLastFetched,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['osm_id'] = Variable<int>(osmId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || nameEn != null) {
+      map['name_en'] = Variable<String>(nameEn);
+    }
+    if (!nullToAbsent || nameZh != null) {
+      map['name_zh'] = Variable<String>(nameZh);
+    }
+    map['category'] = Variable<String>(category);
+    map['lat'] = Variable<double>(lat);
+    map['lon'] = Variable<double>(lon);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || wikiSummary != null) {
+      map['wiki_summary'] = Variable<String>(wikiSummary);
+    }
+    if (!nullToAbsent || thumbnailUrl != null) {
+      map['thumbnail_url'] = Variable<String>(thumbnailUrl);
+    }
+    if (!nullToAbsent || website != null) {
+      map['website'] = Variable<String>(website);
+    }
+    if (!nullToAbsent || openingHours != null) {
+      map['opening_hours'] = Variable<String>(openingHours);
+    }
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
+    if (!nullToAbsent || wikidata != null) {
+      map['wikidata'] = Variable<String>(wikidata);
+    }
+    if (!nullToAbsent || wikipedia != null) {
+      map['wikipedia'] = Variable<String>(wikipedia);
+    }
+    if (!nullToAbsent || provinceMa != null) {
+      map['province_ma'] = Variable<String>(provinceMa);
+    }
+    if (!nullToAbsent || wikiLastFetched != null) {
+      map['wiki_last_fetched'] = Variable<DateTime>(wikiLastFetched);
+    }
+    return map;
+  }
+
+  TourismPlacesCompanion toCompanion(bool nullToAbsent) {
+    return TourismPlacesCompanion(
+      osmId: Value(osmId),
+      name: Value(name),
+      nameEn: nameEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameEn),
+      nameZh: nameZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameZh),
+      category: Value(category),
+      lat: Value(lat),
+      lon: Value(lon),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      wikiSummary: wikiSummary == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wikiSummary),
+      thumbnailUrl: thumbnailUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(thumbnailUrl),
+      website: website == null && nullToAbsent
+          ? const Value.absent()
+          : Value(website),
+      openingHours: openingHours == null && nullToAbsent
+          ? const Value.absent()
+          : Value(openingHours),
+      phone: phone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phone),
+      wikidata: wikidata == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wikidata),
+      wikipedia: wikipedia == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wikipedia),
+      provinceMa: provinceMa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(provinceMa),
+      wikiLastFetched: wikiLastFetched == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wikiLastFetched),
+    );
+  }
+
+  factory TourismPlace.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TourismPlace(
+      osmId: serializer.fromJson<int>(json['osmId']),
+      name: serializer.fromJson<String>(json['name']),
+      nameEn: serializer.fromJson<String?>(json['nameEn']),
+      nameZh: serializer.fromJson<String?>(json['nameZh']),
+      category: serializer.fromJson<String>(json['category']),
+      lat: serializer.fromJson<double>(json['lat']),
+      lon: serializer.fromJson<double>(json['lon']),
+      description: serializer.fromJson<String?>(json['description']),
+      wikiSummary: serializer.fromJson<String?>(json['wikiSummary']),
+      thumbnailUrl: serializer.fromJson<String?>(json['thumbnailUrl']),
+      website: serializer.fromJson<String?>(json['website']),
+      openingHours: serializer.fromJson<String?>(json['openingHours']),
+      phone: serializer.fromJson<String?>(json['phone']),
+      wikidata: serializer.fromJson<String?>(json['wikidata']),
+      wikipedia: serializer.fromJson<String?>(json['wikipedia']),
+      provinceMa: serializer.fromJson<String?>(json['provinceMa']),
+      wikiLastFetched: serializer.fromJson<DateTime?>(json['wikiLastFetched']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'osmId': serializer.toJson<int>(osmId),
+      'name': serializer.toJson<String>(name),
+      'nameEn': serializer.toJson<String?>(nameEn),
+      'nameZh': serializer.toJson<String?>(nameZh),
+      'category': serializer.toJson<String>(category),
+      'lat': serializer.toJson<double>(lat),
+      'lon': serializer.toJson<double>(lon),
+      'description': serializer.toJson<String?>(description),
+      'wikiSummary': serializer.toJson<String?>(wikiSummary),
+      'thumbnailUrl': serializer.toJson<String?>(thumbnailUrl),
+      'website': serializer.toJson<String?>(website),
+      'openingHours': serializer.toJson<String?>(openingHours),
+      'phone': serializer.toJson<String?>(phone),
+      'wikidata': serializer.toJson<String?>(wikidata),
+      'wikipedia': serializer.toJson<String?>(wikipedia),
+      'provinceMa': serializer.toJson<String?>(provinceMa),
+      'wikiLastFetched': serializer.toJson<DateTime?>(wikiLastFetched),
+    };
+  }
+
+  TourismPlace copyWith({
+    int? osmId,
+    String? name,
+    Value<String?> nameEn = const Value.absent(),
+    Value<String?> nameZh = const Value.absent(),
+    String? category,
+    double? lat,
+    double? lon,
+    Value<String?> description = const Value.absent(),
+    Value<String?> wikiSummary = const Value.absent(),
+    Value<String?> thumbnailUrl = const Value.absent(),
+    Value<String?> website = const Value.absent(),
+    Value<String?> openingHours = const Value.absent(),
+    Value<String?> phone = const Value.absent(),
+    Value<String?> wikidata = const Value.absent(),
+    Value<String?> wikipedia = const Value.absent(),
+    Value<String?> provinceMa = const Value.absent(),
+    Value<DateTime?> wikiLastFetched = const Value.absent(),
+  }) => TourismPlace(
+    osmId: osmId ?? this.osmId,
+    name: name ?? this.name,
+    nameEn: nameEn.present ? nameEn.value : this.nameEn,
+    nameZh: nameZh.present ? nameZh.value : this.nameZh,
+    category: category ?? this.category,
+    lat: lat ?? this.lat,
+    lon: lon ?? this.lon,
+    description: description.present ? description.value : this.description,
+    wikiSummary: wikiSummary.present ? wikiSummary.value : this.wikiSummary,
+    thumbnailUrl: thumbnailUrl.present ? thumbnailUrl.value : this.thumbnailUrl,
+    website: website.present ? website.value : this.website,
+    openingHours: openingHours.present ? openingHours.value : this.openingHours,
+    phone: phone.present ? phone.value : this.phone,
+    wikidata: wikidata.present ? wikidata.value : this.wikidata,
+    wikipedia: wikipedia.present ? wikipedia.value : this.wikipedia,
+    provinceMa: provinceMa.present ? provinceMa.value : this.provinceMa,
+    wikiLastFetched: wikiLastFetched.present
+        ? wikiLastFetched.value
+        : this.wikiLastFetched,
+  );
+  TourismPlace copyWithCompanion(TourismPlacesCompanion data) {
+    return TourismPlace(
+      osmId: data.osmId.present ? data.osmId.value : this.osmId,
+      name: data.name.present ? data.name.value : this.name,
+      nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
+      nameZh: data.nameZh.present ? data.nameZh.value : this.nameZh,
+      category: data.category.present ? data.category.value : this.category,
+      lat: data.lat.present ? data.lat.value : this.lat,
+      lon: data.lon.present ? data.lon.value : this.lon,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      wikiSummary: data.wikiSummary.present
+          ? data.wikiSummary.value
+          : this.wikiSummary,
+      thumbnailUrl: data.thumbnailUrl.present
+          ? data.thumbnailUrl.value
+          : this.thumbnailUrl,
+      website: data.website.present ? data.website.value : this.website,
+      openingHours: data.openingHours.present
+          ? data.openingHours.value
+          : this.openingHours,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      wikidata: data.wikidata.present ? data.wikidata.value : this.wikidata,
+      wikipedia: data.wikipedia.present ? data.wikipedia.value : this.wikipedia,
+      provinceMa: data.provinceMa.present
+          ? data.provinceMa.value
+          : this.provinceMa,
+      wikiLastFetched: data.wikiLastFetched.present
+          ? data.wikiLastFetched.value
+          : this.wikiLastFetched,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TourismPlace(')
+          ..write('osmId: $osmId, ')
+          ..write('name: $name, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('nameZh: $nameZh, ')
+          ..write('category: $category, ')
+          ..write('lat: $lat, ')
+          ..write('lon: $lon, ')
+          ..write('description: $description, ')
+          ..write('wikiSummary: $wikiSummary, ')
+          ..write('thumbnailUrl: $thumbnailUrl, ')
+          ..write('website: $website, ')
+          ..write('openingHours: $openingHours, ')
+          ..write('phone: $phone, ')
+          ..write('wikidata: $wikidata, ')
+          ..write('wikipedia: $wikipedia, ')
+          ..write('provinceMa: $provinceMa, ')
+          ..write('wikiLastFetched: $wikiLastFetched')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    osmId,
+    name,
+    nameEn,
+    nameZh,
+    category,
+    lat,
+    lon,
+    description,
+    wikiSummary,
+    thumbnailUrl,
+    website,
+    openingHours,
+    phone,
+    wikidata,
+    wikipedia,
+    provinceMa,
+    wikiLastFetched,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TourismPlace &&
+          other.osmId == this.osmId &&
+          other.name == this.name &&
+          other.nameEn == this.nameEn &&
+          other.nameZh == this.nameZh &&
+          other.category == this.category &&
+          other.lat == this.lat &&
+          other.lon == this.lon &&
+          other.description == this.description &&
+          other.wikiSummary == this.wikiSummary &&
+          other.thumbnailUrl == this.thumbnailUrl &&
+          other.website == this.website &&
+          other.openingHours == this.openingHours &&
+          other.phone == this.phone &&
+          other.wikidata == this.wikidata &&
+          other.wikipedia == this.wikipedia &&
+          other.provinceMa == this.provinceMa &&
+          other.wikiLastFetched == this.wikiLastFetched);
+}
+
+class TourismPlacesCompanion extends UpdateCompanion<TourismPlace> {
+  final Value<int> osmId;
+  final Value<String> name;
+  final Value<String?> nameEn;
+  final Value<String?> nameZh;
+  final Value<String> category;
+  final Value<double> lat;
+  final Value<double> lon;
+  final Value<String?> description;
+  final Value<String?> wikiSummary;
+  final Value<String?> thumbnailUrl;
+  final Value<String?> website;
+  final Value<String?> openingHours;
+  final Value<String?> phone;
+  final Value<String?> wikidata;
+  final Value<String?> wikipedia;
+  final Value<String?> provinceMa;
+  final Value<DateTime?> wikiLastFetched;
+  const TourismPlacesCompanion({
+    this.osmId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.nameEn = const Value.absent(),
+    this.nameZh = const Value.absent(),
+    this.category = const Value.absent(),
+    this.lat = const Value.absent(),
+    this.lon = const Value.absent(),
+    this.description = const Value.absent(),
+    this.wikiSummary = const Value.absent(),
+    this.thumbnailUrl = const Value.absent(),
+    this.website = const Value.absent(),
+    this.openingHours = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.wikidata = const Value.absent(),
+    this.wikipedia = const Value.absent(),
+    this.provinceMa = const Value.absent(),
+    this.wikiLastFetched = const Value.absent(),
+  });
+  TourismPlacesCompanion.insert({
+    this.osmId = const Value.absent(),
+    required String name,
+    this.nameEn = const Value.absent(),
+    this.nameZh = const Value.absent(),
+    required String category,
+    required double lat,
+    required double lon,
+    this.description = const Value.absent(),
+    this.wikiSummary = const Value.absent(),
+    this.thumbnailUrl = const Value.absent(),
+    this.website = const Value.absent(),
+    this.openingHours = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.wikidata = const Value.absent(),
+    this.wikipedia = const Value.absent(),
+    this.provinceMa = const Value.absent(),
+    this.wikiLastFetched = const Value.absent(),
+  }) : name = Value(name),
+       category = Value(category),
+       lat = Value(lat),
+       lon = Value(lon);
+  static Insertable<TourismPlace> custom({
+    Expression<int>? osmId,
+    Expression<String>? name,
+    Expression<String>? nameEn,
+    Expression<String>? nameZh,
+    Expression<String>? category,
+    Expression<double>? lat,
+    Expression<double>? lon,
+    Expression<String>? description,
+    Expression<String>? wikiSummary,
+    Expression<String>? thumbnailUrl,
+    Expression<String>? website,
+    Expression<String>? openingHours,
+    Expression<String>? phone,
+    Expression<String>? wikidata,
+    Expression<String>? wikipedia,
+    Expression<String>? provinceMa,
+    Expression<DateTime>? wikiLastFetched,
+  }) {
+    return RawValuesInsertable({
+      if (osmId != null) 'osm_id': osmId,
+      if (name != null) 'name': name,
+      if (nameEn != null) 'name_en': nameEn,
+      if (nameZh != null) 'name_zh': nameZh,
+      if (category != null) 'category': category,
+      if (lat != null) 'lat': lat,
+      if (lon != null) 'lon': lon,
+      if (description != null) 'description': description,
+      if (wikiSummary != null) 'wiki_summary': wikiSummary,
+      if (thumbnailUrl != null) 'thumbnail_url': thumbnailUrl,
+      if (website != null) 'website': website,
+      if (openingHours != null) 'opening_hours': openingHours,
+      if (phone != null) 'phone': phone,
+      if (wikidata != null) 'wikidata': wikidata,
+      if (wikipedia != null) 'wikipedia': wikipedia,
+      if (provinceMa != null) 'province_ma': provinceMa,
+      if (wikiLastFetched != null) 'wiki_last_fetched': wikiLastFetched,
+    });
+  }
+
+  TourismPlacesCompanion copyWith({
+    Value<int>? osmId,
+    Value<String>? name,
+    Value<String?>? nameEn,
+    Value<String?>? nameZh,
+    Value<String>? category,
+    Value<double>? lat,
+    Value<double>? lon,
+    Value<String?>? description,
+    Value<String?>? wikiSummary,
+    Value<String?>? thumbnailUrl,
+    Value<String?>? website,
+    Value<String?>? openingHours,
+    Value<String?>? phone,
+    Value<String?>? wikidata,
+    Value<String?>? wikipedia,
+    Value<String?>? provinceMa,
+    Value<DateTime?>? wikiLastFetched,
+  }) {
+    return TourismPlacesCompanion(
+      osmId: osmId ?? this.osmId,
+      name: name ?? this.name,
+      nameEn: nameEn ?? this.nameEn,
+      nameZh: nameZh ?? this.nameZh,
+      category: category ?? this.category,
+      lat: lat ?? this.lat,
+      lon: lon ?? this.lon,
+      description: description ?? this.description,
+      wikiSummary: wikiSummary ?? this.wikiSummary,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      website: website ?? this.website,
+      openingHours: openingHours ?? this.openingHours,
+      phone: phone ?? this.phone,
+      wikidata: wikidata ?? this.wikidata,
+      wikipedia: wikipedia ?? this.wikipedia,
+      provinceMa: provinceMa ?? this.provinceMa,
+      wikiLastFetched: wikiLastFetched ?? this.wikiLastFetched,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (osmId.present) {
+      map['osm_id'] = Variable<int>(osmId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (nameEn.present) {
+      map['name_en'] = Variable<String>(nameEn.value);
+    }
+    if (nameZh.present) {
+      map['name_zh'] = Variable<String>(nameZh.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (lat.present) {
+      map['lat'] = Variable<double>(lat.value);
+    }
+    if (lon.present) {
+      map['lon'] = Variable<double>(lon.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (wikiSummary.present) {
+      map['wiki_summary'] = Variable<String>(wikiSummary.value);
+    }
+    if (thumbnailUrl.present) {
+      map['thumbnail_url'] = Variable<String>(thumbnailUrl.value);
+    }
+    if (website.present) {
+      map['website'] = Variable<String>(website.value);
+    }
+    if (openingHours.present) {
+      map['opening_hours'] = Variable<String>(openingHours.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (wikidata.present) {
+      map['wikidata'] = Variable<String>(wikidata.value);
+    }
+    if (wikipedia.present) {
+      map['wikipedia'] = Variable<String>(wikipedia.value);
+    }
+    if (provinceMa.present) {
+      map['province_ma'] = Variable<String>(provinceMa.value);
+    }
+    if (wikiLastFetched.present) {
+      map['wiki_last_fetched'] = Variable<DateTime>(wikiLastFetched.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TourismPlacesCompanion(')
+          ..write('osmId: $osmId, ')
+          ..write('name: $name, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('nameZh: $nameZh, ')
+          ..write('category: $category, ')
+          ..write('lat: $lat, ')
+          ..write('lon: $lon, ')
+          ..write('description: $description, ')
+          ..write('wikiSummary: $wikiSummary, ')
+          ..write('thumbnailUrl: $thumbnailUrl, ')
+          ..write('website: $website, ')
+          ..write('openingHours: $openingHours, ')
+          ..write('phone: $phone, ')
+          ..write('wikidata: $wikidata, ')
+          ..write('wikipedia: $wikipedia, ')
+          ..write('provinceMa: $provinceMa, ')
+          ..write('wikiLastFetched: $wikiLastFetched')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2584,10 +3581,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $GeoJsonCachesTable geoJsonCaches = $GeoJsonCachesTable(this);
   late final $ChatHistoryMessagesTable chatHistoryMessages =
       $ChatHistoryMessagesTable(this);
+  late final $TourismPlacesTable tourismPlaces = $TourismPlacesTable(this);
   late final AdministrativeUnitDao administrativeUnitDao =
       AdministrativeUnitDao(this as AppDatabase);
   late final GeoJsonDao geoJsonDao = GeoJsonDao(this as AppDatabase);
   late final ChatDao chatDao = ChatDao(this as AppDatabase);
+  late final TourismDao tourismDao = TourismDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2597,6 +3596,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     historicalEvents,
     geoJsonCaches,
     chatHistoryMessages,
+    tourismPlaces,
   ];
 }
 
@@ -3878,6 +4878,440 @@ typedef $$ChatHistoryMessagesTableProcessedTableManager =
       ChatHistoryMessage,
       PrefetchHooks Function()
     >;
+typedef $$TourismPlacesTableCreateCompanionBuilder =
+    TourismPlacesCompanion Function({
+      Value<int> osmId,
+      required String name,
+      Value<String?> nameEn,
+      Value<String?> nameZh,
+      required String category,
+      required double lat,
+      required double lon,
+      Value<String?> description,
+      Value<String?> wikiSummary,
+      Value<String?> thumbnailUrl,
+      Value<String?> website,
+      Value<String?> openingHours,
+      Value<String?> phone,
+      Value<String?> wikidata,
+      Value<String?> wikipedia,
+      Value<String?> provinceMa,
+      Value<DateTime?> wikiLastFetched,
+    });
+typedef $$TourismPlacesTableUpdateCompanionBuilder =
+    TourismPlacesCompanion Function({
+      Value<int> osmId,
+      Value<String> name,
+      Value<String?> nameEn,
+      Value<String?> nameZh,
+      Value<String> category,
+      Value<double> lat,
+      Value<double> lon,
+      Value<String?> description,
+      Value<String?> wikiSummary,
+      Value<String?> thumbnailUrl,
+      Value<String?> website,
+      Value<String?> openingHours,
+      Value<String?> phone,
+      Value<String?> wikidata,
+      Value<String?> wikipedia,
+      Value<String?> provinceMa,
+      Value<DateTime?> wikiLastFetched,
+    });
+
+class $$TourismPlacesTableFilterComposer
+    extends Composer<_$AppDatabase, $TourismPlacesTable> {
+  $$TourismPlacesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get osmId => $composableBuilder(
+    column: $table.osmId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameEn => $composableBuilder(
+    column: $table.nameEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameZh => $composableBuilder(
+    column: $table.nameZh,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lat => $composableBuilder(
+    column: $table.lat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lon => $composableBuilder(
+    column: $table.lon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get wikiSummary => $composableBuilder(
+    column: $table.wikiSummary,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get thumbnailUrl => $composableBuilder(
+    column: $table.thumbnailUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get website => $composableBuilder(
+    column: $table.website,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get openingHours => $composableBuilder(
+    column: $table.openingHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get wikidata => $composableBuilder(
+    column: $table.wikidata,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get wikipedia => $composableBuilder(
+    column: $table.wikipedia,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get provinceMa => $composableBuilder(
+    column: $table.provinceMa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get wikiLastFetched => $composableBuilder(
+    column: $table.wikiLastFetched,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TourismPlacesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TourismPlacesTable> {
+  $$TourismPlacesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get osmId => $composableBuilder(
+    column: $table.osmId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameEn => $composableBuilder(
+    column: $table.nameEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameZh => $composableBuilder(
+    column: $table.nameZh,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get lat => $composableBuilder(
+    column: $table.lat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get lon => $composableBuilder(
+    column: $table.lon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get wikiSummary => $composableBuilder(
+    column: $table.wikiSummary,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get thumbnailUrl => $composableBuilder(
+    column: $table.thumbnailUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get website => $composableBuilder(
+    column: $table.website,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get openingHours => $composableBuilder(
+    column: $table.openingHours,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get wikidata => $composableBuilder(
+    column: $table.wikidata,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get wikipedia => $composableBuilder(
+    column: $table.wikipedia,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get provinceMa => $composableBuilder(
+    column: $table.provinceMa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get wikiLastFetched => $composableBuilder(
+    column: $table.wikiLastFetched,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TourismPlacesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TourismPlacesTable> {
+  $$TourismPlacesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get osmId =>
+      $composableBuilder(column: $table.osmId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get nameEn =>
+      $composableBuilder(column: $table.nameEn, builder: (column) => column);
+
+  GeneratedColumn<String> get nameZh =>
+      $composableBuilder(column: $table.nameZh, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<double> get lat =>
+      $composableBuilder(column: $table.lat, builder: (column) => column);
+
+  GeneratedColumn<double> get lon =>
+      $composableBuilder(column: $table.lon, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get wikiSummary => $composableBuilder(
+    column: $table.wikiSummary,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get thumbnailUrl => $composableBuilder(
+    column: $table.thumbnailUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get website =>
+      $composableBuilder(column: $table.website, builder: (column) => column);
+
+  GeneratedColumn<String> get openingHours => $composableBuilder(
+    column: $table.openingHours,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<String> get wikidata =>
+      $composableBuilder(column: $table.wikidata, builder: (column) => column);
+
+  GeneratedColumn<String> get wikipedia =>
+      $composableBuilder(column: $table.wikipedia, builder: (column) => column);
+
+  GeneratedColumn<String> get provinceMa => $composableBuilder(
+    column: $table.provinceMa,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get wikiLastFetched => $composableBuilder(
+    column: $table.wikiLastFetched,
+    builder: (column) => column,
+  );
+}
+
+class $$TourismPlacesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TourismPlacesTable,
+          TourismPlace,
+          $$TourismPlacesTableFilterComposer,
+          $$TourismPlacesTableOrderingComposer,
+          $$TourismPlacesTableAnnotationComposer,
+          $$TourismPlacesTableCreateCompanionBuilder,
+          $$TourismPlacesTableUpdateCompanionBuilder,
+          (
+            TourismPlace,
+            BaseReferences<_$AppDatabase, $TourismPlacesTable, TourismPlace>,
+          ),
+          TourismPlace,
+          PrefetchHooks Function()
+        > {
+  $$TourismPlacesTableTableManager(_$AppDatabase db, $TourismPlacesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TourismPlacesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TourismPlacesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TourismPlacesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> osmId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> nameEn = const Value.absent(),
+                Value<String?> nameZh = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<double> lat = const Value.absent(),
+                Value<double> lon = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> wikiSummary = const Value.absent(),
+                Value<String?> thumbnailUrl = const Value.absent(),
+                Value<String?> website = const Value.absent(),
+                Value<String?> openingHours = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> wikidata = const Value.absent(),
+                Value<String?> wikipedia = const Value.absent(),
+                Value<String?> provinceMa = const Value.absent(),
+                Value<DateTime?> wikiLastFetched = const Value.absent(),
+              }) => TourismPlacesCompanion(
+                osmId: osmId,
+                name: name,
+                nameEn: nameEn,
+                nameZh: nameZh,
+                category: category,
+                lat: lat,
+                lon: lon,
+                description: description,
+                wikiSummary: wikiSummary,
+                thumbnailUrl: thumbnailUrl,
+                website: website,
+                openingHours: openingHours,
+                phone: phone,
+                wikidata: wikidata,
+                wikipedia: wikipedia,
+                provinceMa: provinceMa,
+                wikiLastFetched: wikiLastFetched,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> osmId = const Value.absent(),
+                required String name,
+                Value<String?> nameEn = const Value.absent(),
+                Value<String?> nameZh = const Value.absent(),
+                required String category,
+                required double lat,
+                required double lon,
+                Value<String?> description = const Value.absent(),
+                Value<String?> wikiSummary = const Value.absent(),
+                Value<String?> thumbnailUrl = const Value.absent(),
+                Value<String?> website = const Value.absent(),
+                Value<String?> openingHours = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> wikidata = const Value.absent(),
+                Value<String?> wikipedia = const Value.absent(),
+                Value<String?> provinceMa = const Value.absent(),
+                Value<DateTime?> wikiLastFetched = const Value.absent(),
+              }) => TourismPlacesCompanion.insert(
+                osmId: osmId,
+                name: name,
+                nameEn: nameEn,
+                nameZh: nameZh,
+                category: category,
+                lat: lat,
+                lon: lon,
+                description: description,
+                wikiSummary: wikiSummary,
+                thumbnailUrl: thumbnailUrl,
+                website: website,
+                openingHours: openingHours,
+                phone: phone,
+                wikidata: wikidata,
+                wikipedia: wikipedia,
+                provinceMa: provinceMa,
+                wikiLastFetched: wikiLastFetched,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TourismPlacesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TourismPlacesTable,
+      TourismPlace,
+      $$TourismPlacesTableFilterComposer,
+      $$TourismPlacesTableOrderingComposer,
+      $$TourismPlacesTableAnnotationComposer,
+      $$TourismPlacesTableCreateCompanionBuilder,
+      $$TourismPlacesTableUpdateCompanionBuilder,
+      (
+        TourismPlace,
+        BaseReferences<_$AppDatabase, $TourismPlacesTable, TourismPlace>,
+      ),
+      TourismPlace,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3890,4 +5324,6 @@ class $AppDatabaseManager {
       $$GeoJsonCachesTableTableManager(_db, _db.geoJsonCaches);
   $$ChatHistoryMessagesTableTableManager get chatHistoryMessages =>
       $$ChatHistoryMessagesTableTableManager(_db, _db.chatHistoryMessages);
+  $$TourismPlacesTableTableManager get tourismPlaces =>
+      $$TourismPlacesTableTableManager(_db, _db.tourismPlaces);
 }

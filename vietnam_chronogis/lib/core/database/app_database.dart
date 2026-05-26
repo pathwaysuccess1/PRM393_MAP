@@ -1,5 +1,9 @@
-import 'dart:io';
+// lib/core/database/app_database.dart
+//
+// THAY THẾ file cũ — thêm TourismPlaces table + TourismDao.
+// Tăng schemaVersion lên 2, thêm migration onCreate tạo table mới.
 
+import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,9 +14,11 @@ import 'tables/administrative_units_table.dart';
 import 'tables/historical_events_table.dart';
 import 'tables/geojson_cache_table.dart';
 import 'tables/chat_history_table.dart';
+import 'tables/tourism_places_table.dart'; // ← NEW
 import 'daos/administrative_unit_dao.dart';
 import 'daos/geojson_dao.dart';
 import 'daos/chat_dao.dart';
+import 'daos/tourism_dao.dart'; // ← NEW
 
 part 'app_database.g.dart';
 
@@ -22,18 +28,20 @@ part 'app_database.g.dart';
     HistoricalEvents,
     GeoJsonCaches,
     ChatHistoryMessages,
+    TourismPlaces, // ← NEW
   ],
   daos: [
     AdministrativeUnitDao,
     GeoJsonDao,
     ChatDao,
+    TourismDao, // ← NEW
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2; // ← bumped từ 1 → 2
 
   @override
   MigrationStrategy get migration {
@@ -41,7 +49,12 @@ class AppDatabase extends _$AppDatabase {
       onCreate: (Migrator m) async {
         await m.createAll();
       },
-      onUpgrade: (Migrator m, int from, int to) async {},
+      onUpgrade: (Migrator m, int from, int to) async {
+        // v1 → v2: tạo bảng tourism_places
+        if (from < 2) {
+          await m.createTable(tourismPlaces);
+        }
+      },
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
       },
@@ -53,15 +66,12 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(
-        p.join(dbFolder.path, 'vietnam_chronogis', 'chronogis.sqlite'));
+      p.join(dbFolder.path, 'vietnam_chronogis', 'chronogis.sqlite'),
+    );
 
     if (!await file.parent.exists()) {
       await file.parent.create(recursive: true);
     }
-
-    // FIX: applyWorkaroundToOpenSqlite3OnOldAndroidVersions() đã bị xóa
-    // khỏi sqlite3_flutter_libs v0.6.0 — import cũng xóa theo
-    // (sqlite3_flutter_libs giờ tự handle workaround internally)
 
     final cachebase = (await getTemporaryDirectory()).path;
     sqlite3.tempDirectory = cachebase;

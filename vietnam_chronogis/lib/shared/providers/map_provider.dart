@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,6 +61,7 @@ class ShowHeatmapState extends _$ShowHeatmapState {
   }
 
   void toggle() {
+    debugPrint('⚙️ [ShowHeatmapState.toggle] $state → ${!state}');
     state = !state;
   }
 }
@@ -81,11 +83,13 @@ class MapSearchQuery extends Notifier<String> {
   }
 }
 
-final mapSearchQueryProvider =
-    NotifierProvider<MapSearchQuery, String>(MapSearchQuery.new);
+final mapSearchQueryProvider = NotifierProvider<MapSearchQuery, String>(
+  MapSearchQuery.new,
+);
 
-final mapSearchResultsProvider =
-    FutureProvider<List<AdministrativeUnit>>((ref) async {
+final mapSearchResultsProvider = FutureProvider<List<AdministrativeUnit>>((
+  ref,
+) async {
   final query = ref.watch(mapSearchQueryProvider);
   if (query.trim().isEmpty) return [];
   final dao = ref.watch(administrativeUnitDaoProvider);
@@ -119,17 +123,17 @@ final savedLocationsProvider =
 
 final savedAdministrativeUnitsProvider =
     FutureProvider<List<AdministrativeUnit>>((ref) async {
-  final savedCodesAsync = ref.watch(savedLocationsProvider);
-  final savedCodes = savedCodesAsync.value ?? [];
-  if (savedCodes.isEmpty) return [];
+      final savedCodesAsync = ref.watch(savedLocationsProvider);
+      final savedCodes = savedCodesAsync.value ?? [];
+      if (savedCodes.isEmpty) return [];
 
-  final dao = ref.watch(administrativeUnitDaoProvider);
-  final List<AdministrativeUnit> units = [];
-  for (final code in savedCodes) {
-    final unit = await dao.getUnitByMa(code);
-    if (unit != null) {
-      units.add(unit);
-    }
-  }
-  return units;
-});
+      final dao = ref.watch(administrativeUnitDaoProvider);
+      final List<AdministrativeUnit> units = [];
+      for (final code in savedCodes) {
+        final unit = await dao.getUnitByMa(code);
+        if (unit != null) {
+          units.add(unit);
+        }
+      }
+      return units;
+    });

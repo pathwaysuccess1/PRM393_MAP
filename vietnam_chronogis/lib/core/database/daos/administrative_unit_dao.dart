@@ -20,7 +20,13 @@ class AdministrativeUnitDao extends DatabaseAccessor<AppDatabase> with _$Adminis
   }
 
   Future<List<AdministrativeUnit>> getAllProvinces() {
-    return (select(administrativeUnits)..where((t) => t.kind.equals('province'))).get();
+    return (select(administrativeUnits)
+          ..where(
+            (t) =>
+                t.kind.equals('province') |
+                t.type.isIn(['Tỉnh', 'Thành phố', 'Tinh', 'Thanh pho']),
+          ))
+        .get();
   }
 
   Future<List<AdministrativeUnit>> getCommunesByProvince(String parentMa) {
@@ -40,7 +46,12 @@ class AdministrativeUnitDao extends DatabaseAccessor<AppDatabase> with _$Adminis
 
   Future<List<AdministrativeUnit>> getProvincesByRegion(String region) {
     return (select(administrativeUnits)
-          ..where((t) => t.kind.equals('province') & t.macroRegion.equals(region)))
+          ..where(
+            (t) =>
+                (t.kind.equals('province') |
+                    t.type.isIn(['Tỉnh', 'Thành phố', 'Tinh', 'Thanh pho'])) &
+                t.macroRegion.equals(region),
+          ))
         .get();
   }
 
@@ -48,7 +59,11 @@ class AdministrativeUnitDao extends DatabaseAccessor<AppDatabase> with _$Adminis
     if (query.trim().isEmpty) return [];
     
     final allUnits = await (select(administrativeUnits)
-          ..where((t) => t.kind.isIn(['province', 'commune'])))
+          ..where(
+            (t) =>
+                t.kind.isIn(['province', 'commune']) |
+                t.type.isIn(['Tỉnh', 'Thành phố', 'Tinh', 'Thanh pho']),
+          ))
         .get();
 
     final normalizedQuery = _normalizeVietnamese(query);

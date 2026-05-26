@@ -1,6 +1,10 @@
+// lib/data/geojson/temporal_geojson_service.dart
+// FIX: unused import (flutter_riverpod) → xoá
+// FIX: unintended_html_in_doc_comment → dùng backtick thay vì angle brackets
+
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// FIX: xoá import flutter_riverpod không dùng
 
 import '../../core/database/daos/administrative_unit_dao.dart';
 import '../../core/database/daos/geojson_dao.dart';
@@ -14,6 +18,7 @@ class TemporalPolygon {
   final String displayName;
   final String geoJsonData;
   final String macroRegion;
+
   /// true → dữ liệu từ GADM (63 tỉnh trước 2025)
   /// false → dữ liệu từ Hugging Face (34 siêu tỉnh 2025+)
   final bool isPreMerger;
@@ -37,26 +42,73 @@ class TemporalGeoJsonService {
 
   TemporalGeoJsonService(this._geoJsonDao, this._unitDao);
 
-  // Tên 63 tỉnh thành theo đúng field NAME_1 trong gadm41_VNM_1.json
   static const List<String> gadmProvinceNames = [
-    'An Giang', 'Ba Ria - Vung Tau', 'Bac Giang', 'Bac Kan', 'Bac Lieu',
-    'Bac Ninh', 'Ben Tre', 'Binh Dinh', 'Binh Duong', 'Binh Phuoc',
-    'Binh Thuan', 'Ca Mau', 'Can Tho', 'Cao Bang', 'Da Nang',
-    'Dak Lak', 'Dak Nong', 'Dien Bien', 'Dong Nai', 'Dong Thap',
-    'Gia Lai', 'Ha Giang', 'Ha Nam', 'Ha Noi', 'Ha Tinh',
-    'Hai Duong', 'Hai Phong', 'Hau Giang', 'Hoa Binh', 'Hung Yen',
-    'Khanh Hoa', 'Kien Giang', 'Kon Tum', 'Lai Chau', 'Lam Dong',
-    'Lang Son', 'Lao Cai', 'Long An', 'Nam Dinh', 'Nghe An',
-    'Ninh Binh', 'Ninh Thuan', 'Phu Tho', 'Phu Yen', 'Quang Binh',
-    'Quang Nam', 'Quang Ngai', 'Quang Ninh', 'Quang Tri', 'Soc Trang',
-    'Son La', 'Tay Ninh', 'Thai Binh', 'Thai Nguyen', 'Thanh Hoa',
-    'Thua Thien Hue', 'Tien Giang', 'TP Ho Chi Minh', 'Tra Vinh',
-    'Tuyen Quang', 'Vinh Long', 'Vinh Phuc', 'Yen Bai',
+    'An Giang',
+    'Ba Ria - Vung Tau',
+    'Bac Giang',
+    'Bac Kan',
+    'Bac Lieu',
+    'Bac Ninh',
+    'Ben Tre',
+    'Binh Dinh',
+    'Binh Duong',
+    'Binh Phuoc',
+    'Binh Thuan',
+    'Ca Mau',
+    'Can Tho',
+    'Cao Bang',
+    'Da Nang',
+    'Dak Lak',
+    'Dak Nong',
+    'Dien Bien',
+    'Dong Nai',
+    'Dong Thap',
+    'Gia Lai',
+    'Ha Giang',
+    'Ha Nam',
+    'Ha Noi',
+    'Ha Tinh',
+    'Hai Duong',
+    'Hai Phong',
+    'Hau Giang',
+    'Hoa Binh',
+    'Hung Yen',
+    'Khanh Hoa',
+    'Kien Giang',
+    'Kon Tum',
+    'Lai Chau',
+    'Lam Dong',
+    'Lang Son',
+    'Lao Cai',
+    'Long An',
+    'Nam Dinh',
+    'Nghe An',
+    'Ninh Binh',
+    'Ninh Thuan',
+    'Phu Tho',
+    'Phu Yen',
+    'Quang Binh',
+    'Quang Nam',
+    'Quang Ngai',
+    'Quang Ninh',
+    'Quang Tri',
+    'Soc Trang',
+    'Son La',
+    'Tay Ninh',
+    'Thai Binh',
+    'Thai Nguyen',
+    'Thanh Hoa',
+    'Thua Thien Hue',
+    'Tien Giang',
+    'TP Ho Chi Minh',
+    'Tra Vinh',
+    'Tuyen Quang',
+    'Vinh Long',
+    'Vinh Phuc',
+    'Yen Bai',
   ];
 
-  // Mapping: tên GADM → macro_region (6 vùng kinh tế GSO)
   static const Map<String, String> _gadmToRegion = {
-    // Đồng bằng sông Hồng
     'Ha Noi': 'red_river_delta',
     'Hai Phong': 'red_river_delta',
     'Hung Yen': 'red_river_delta',
@@ -67,7 +119,6 @@ class TemporalGeoJsonService {
     'Thai Binh': 'red_river_delta',
     'Vinh Phuc': 'red_river_delta',
     'Bac Ninh': 'red_river_delta',
-    // Trung du và miền núi phía Bắc
     'Ha Giang': 'northern_midlands',
     'Cao Bang': 'northern_midlands',
     'Bac Kan': 'northern_midlands',
@@ -83,7 +134,6 @@ class TemporalGeoJsonService {
     'Lai Chau': 'northern_midlands',
     'Son La': 'northern_midlands',
     'Quang Ninh': 'northern_midlands',
-    // Bắc Trung Bộ và duyên hải miền Trung
     'Thanh Hoa': 'central_coast',
     'Nghe An': 'central_coast',
     'Ha Tinh': 'central_coast',
@@ -98,20 +148,17 @@ class TemporalGeoJsonService {
     'Khanh Hoa': 'central_coast',
     'Ninh Thuan': 'central_coast',
     'Binh Thuan': 'central_coast',
-    // Tây Nguyên
     'Kon Tum': 'central_highlands',
     'Gia Lai': 'central_highlands',
     'Dak Lak': 'central_highlands',
     'Dak Nong': 'central_highlands',
     'Lam Dong': 'central_highlands',
-    // Đông Nam Bộ
     'TP Ho Chi Minh': 'southeast',
     'Binh Phuoc': 'southeast',
     'Tay Ninh': 'southeast',
     'Binh Duong': 'southeast',
     'Dong Nai': 'southeast',
     'Ba Ria - Vung Tau': 'southeast',
-    // Đồng bằng sông Cửu Long
     'Long An': 'mekong_delta',
     'Tien Giang': 'mekong_delta',
     'Ben Tre': 'mekong_delta',
@@ -128,8 +175,8 @@ class TemporalGeoJsonService {
   };
 
   /// Trả về danh sách [TemporalPolygon] phù hợp với [year]:
-  /// - year < 2025  → 63 tỉnh GADM (ranh giới lịch sử)
-  /// - year >= 2025 → 34 siêu tỉnh Hugging Face (sau sáp nhập NQ 202)
+  /// - `year < 2025`  → 63 tỉnh GADM (ranh giới lịch sử)
+  /// - `year >= 2025` → 34 siêu tỉnh Hugging Face (sau sáp nhập NQ 202)
   Future<List<TemporalPolygon>> getPolygonsForYear(int year) async {
     if (year < 2025) {
       return _getHistoricalPolygons63();
@@ -138,49 +185,53 @@ class TemporalGeoJsonService {
     }
   }
 
-  /// Chế độ A: 63 tỉnh GADM (1975–2024)
   Future<List<TemporalPolygon>> _getHistoricalPolygons63() async {
-    final List<TemporalPolygon> result = [];
+    final result = <TemporalPolygon>[];
     for (final name in gadmProvinceNames) {
       final cache = await _geoJsonDao.getGeoJsonByMa('gadm_$name');
       if (cache == null) {
         debugPrint('TemporalGeoJsonService: cache miss for gadm_$name');
         continue;
       }
-      result.add(TemporalPolygon(
-        key: 'gadm_$name',
-        displayName: name,
-        geoJsonData: cache.geoJsonData,
-        macroRegion: _gadmToRegion[name] ?? 'unknown',
-        isPreMerger: true,
-      ));
+      result.add(
+        TemporalPolygon(
+          key: 'gadm_$name',
+          displayName: name,
+          geoJsonData: cache.geoJsonData,
+          macroRegion: _gadmToRegion[name] ?? 'unknown',
+          isPreMerger: true,
+        ),
+      );
     }
-    debugPrint('TemporalGeoJsonService: loaded ${result.length}/63 GADM polygons');
+    debugPrint(
+      'TemporalGeoJsonService: loaded ${result.length}/63 GADM polygons',
+    );
     return result;
   }
 
-  /// Chế độ B: 34 siêu tỉnh HF (2025+)
   Future<List<TemporalPolygon>> _getMergedPolygons34() async {
     final provinces = await _unitDao.getAllProvinces();
-    final List<TemporalPolygon> result = [];
+    final result = <TemporalPolygon>[];
     for (final p in provinces) {
       final cache = await _geoJsonDao.getGeoJsonByMa(p.ma);
       if (cache == null) continue;
-      result.add(TemporalPolygon(
-        key: p.ma,
-        displayName: p.ten,
-        geoJsonData: cache.geoJsonData,
-        macroRegion: p.macroRegion,
-        isPreMerger: false,
-      ));
+      result.add(
+        TemporalPolygon(
+          key: p.ma,
+          displayName: p.ten,
+          geoJsonData: cache.geoJsonData,
+          macroRegion: p.macroRegion,
+          isPreMerger: false,
+        ),
+      );
     }
-    debugPrint('TemporalGeoJsonService: loaded ${result.length}/34 HF merged polygons');
+    debugPrint(
+      'TemporalGeoJsonService: loaded ${result.length}/34 HF merged polygons',
+    );
     return result;
   }
 
-  /// Kiểm tra cache đã có đủ 63 tỉnh GADM chưa (để tự động trigger re-seed)
   Future<bool> hasGadmCacheReady() async {
-    // Kiểm tra ít nhất 3 tỉnh đại diện
     const probes = ['Ha Noi', 'TP Ho Chi Minh', 'Can Tho'];
     for (final name in probes) {
       final c = await _geoJsonDao.getGeoJsonByMa('gadm_$name');
@@ -189,15 +240,17 @@ class TemporalGeoJsonService {
     return true;
   }
 
-  /// Xây dựng displayName đẹp từ key `gadm_<NAME>` cho popup
+  // FIX: unintended_html_in_doc_comment
+  // → dùng backtick thay vì angle brackets trong comment
+  /// Xây dựng displayName từ key `gadm_NAME` cho popup.
   static String displayNameFromKey(String key) {
     if (key.startsWith('gadm_')) {
-      return key.substring(5); // Bỏ prefix "gadm_"
+      return key.substring(5);
     }
     return key;
   }
 
-  /// Chuyển đổi JSON string → List<List<List<List<double>>>> để parse polygon
+  /// Chuyển đổi JSON string → `List<dynamic>` để parse polygon.
   static List<dynamic> decodeGeoJsonData(String geoJsonData) {
     return jsonDecode(geoJsonData) as List<dynamic>;
   }

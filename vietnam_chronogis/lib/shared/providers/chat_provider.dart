@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import '../../data/api/gemini_service.dart';
+import '../../data/api/groq_service.dart';
 import '../../data/repositories/chat_repository.dart';
 import '../../data/repositories/administrative_unit_repository.dart';
 import '../models/chat_message.dart';
@@ -40,8 +40,8 @@ final currentChatContextProvider = FutureProvider<ChatContext>((ref) async {
 
 final suggestedQuestionsProvider = FutureProvider<List<String>>((ref) async {
   final context = await ref.watch(currentChatContextProvider.future);
-  final gemini = ref.watch(geminiServiceProvider);
-  return gemini.generateSuggestedQuestions(context);
+  final groq = ref.watch(groqServiceProvider);
+  return groq.generateSuggestedQuestions(context);
 });
 
 // FIX: StateNotifierProvider → NotifierProvider
@@ -50,17 +50,17 @@ final chatNotifierProvider = NotifierProvider<ChatNotifier, List<ChatMessage>>(
 );
 
 // FIX: StateNotifier<T> → Notifier<T>
-// - Không cần inject GeminiService, ChatRepository, Ref qua constructor nữa
+// - Không cần inject GroqService, ChatRepository, Ref qua constructor nữa
 // - Dùng ref trực tiếp bên trong Notifier
 class ChatNotifier extends Notifier<List<ChatMessage>> {
-  late GeminiService _geminiService;
+  late GroqService _groqService;
   late ChatRepository _repository;
   final _uuid = const Uuid();
 
   @override
   List<ChatMessage> build() {
     // FIX: ref có sẵn, không cần super(initialState) constructor
-    _geminiService = ref.read(geminiServiceProvider);
+    _groqService = ref.read(groqServiceProvider);
     _repository = ref.read(chatRepositoryProvider);
     return [];
   }
@@ -92,7 +92,7 @@ class ChatNotifier extends Notifier<List<ChatMessage>> {
     try {
       // FIX: dùng ref.read thay vì _ref.read
       final chatContext = await ref.read(currentChatContextProvider.future);
-      final stream = _geminiService.sendMessage(text, context: chatContext);
+      final stream = _groqService.sendMessage(text, context: chatContext);
 
       String accumulatedContent = '';
 

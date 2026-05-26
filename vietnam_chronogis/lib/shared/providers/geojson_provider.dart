@@ -7,8 +7,7 @@ final geoJsonParserProvider = Provider((ref) => GeoJsonParser());
 
 final provinceGeoJsonServiceProvider = Provider((ref) {
   return ProvinceGeoJsonService(
-    ref.watch(geoJsonParserProvider),
-    ref.watch(administrativeUnitDaoProvider),
-    ref.watch(geoJsonDaoProvider),
+    unitDao: ref.watch(administrativeUnitDaoProvider),
+    geoJsonDao: ref.watch(geoJsonDaoProvider),
   );
 });
