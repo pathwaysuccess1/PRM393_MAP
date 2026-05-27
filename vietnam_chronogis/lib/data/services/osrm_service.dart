@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 
 class RouteData {
@@ -50,7 +51,7 @@ class OsrmService {
         }
       }
     } catch (e) {
-      print('OSRM Routing Error: $e');
+      debugPrint('OSRM Routing Error: $e');
     }
     return null;
   }

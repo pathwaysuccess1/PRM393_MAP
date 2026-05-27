@@ -32,10 +32,8 @@ class SeedControlWidget extends ConsumerWidget {
                   TextButton(
                     onPressed: () {
                       // Cancel running seed
-                      ref
-                          .read(seedCancelTokenProvider.notifier)
-                          .state
-                          ?.cancel();
+                      ref.read(seedCancelTokenProvider)?.cancel();
+                      ref.read(seedCancelTokenProvider.notifier).set(null);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Hủy quá trình tải dữ liệu...'),
@@ -48,7 +46,7 @@ class SeedControlWidget extends ConsumerWidget {
                 TextButton(
                   onPressed: () {
                     // Retry: refresh the initialization provider
-                    ref.refresh(seedInitializationProvider);
+                    ref.invalidate(seedInitializationProvider);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Bắt đầu lại quá trình tải dữ liệu...'),

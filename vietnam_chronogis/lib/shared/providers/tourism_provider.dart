@@ -135,7 +135,10 @@ final tourismMarkersProvider = FutureProvider<List<Marker>>((ref) async {
     return false;
   }).toList();
   debugPrint(
-    '🗺️ [TourismMarkers] filtered places count=${filteredPlaces.length}',
+    'TourismMarkers: filtered places count=${filteredPlaces.length}; '
+    'acceptedByBoundary=$acceptedByBoundary; '
+    'acceptedByProvinceFallback=$acceptedByProvinceFallback; '
+    'rejectedByBoundary=$rejectedByBoundary',
   );
 
   return filteredPlaces.map((place) {

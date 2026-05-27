@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 
 // FIX: import DAO providers trÃƒÂ¡Ã‚Â»Ã‚Â±c tiÃƒÂ¡Ã‚ÂºÃ‚Â¿p thay vÃƒÆ’Ã‚Â¬ repository
 import '../../../shared/providers/database_provider.dart';
 import '../../../shared/providers/geojson_provider.dart';
 import '../../../shared/providers/map_provider.dart';
-import '../../../shared/providers/timeline_provider.dart';
 import '../../../shared/providers/tourism_provider.dart';
 import '../../../shared/providers/api_provider.dart';
 import '../../../shared/models/population_heatmap_value.dart';
@@ -346,7 +344,7 @@ final mapPolygonsProvider = Provider<AsyncValue<List<Polygon>>>((ref) {
 
       if (showHeatmap) {
         debugPrint(
-          '  ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â ${province.ten}: density=${province.density} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ color=${baseColor.value.toRadixString(16)}',
+          '  ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â ${province.ten}: density=${province.density} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ color=${baseColor.toARGB32().toRadixString(16)}',
         );
       }
 
@@ -413,7 +411,6 @@ class MapViewScreen extends ConsumerWidget {
     final mapStyle = ref.watch(mapTileStyleStateProvider);
     final polygonsAsync = ref.watch(mapPolygonsProvider);
     final geometriesAsync = ref.watch(provinceGeometriesProvider);
-    final selectedYear = ref.watch(selectedYearProvider);
     final tourismMarkersAsync = ref.watch(tourismMarkersProvider);
     final tourismPlacesCountAsync = ref.watch(tourismPlacesCountProvider);
     final showTourism = ref.watch(showTourismLayerProvider);
@@ -553,10 +550,10 @@ class MapViewScreen extends ConsumerWidget {
                         return Container(
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1A1D23).withOpacity(0.92),
+                            color: const Color(0xFF1A1D23).withValues(alpha: 0.92),
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
-                              color: const Color(0xFFE24B4A).withOpacity(0.7),
+                              color: const Color(0xFFE24B4A).withValues(alpha: 0.7),
                             ),
                           ),
                           child: Row(
@@ -582,10 +579,10 @@ class MapViewScreen extends ConsumerWidget {
                       loading: () => Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A1D23).withOpacity(0.92),
+                          color: const Color(0xFF1A1D23).withValues(alpha: 0.92),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: const Color(0xFFE24B4A).withOpacity(0.7),
+                            color: const Color(0xFFE24B4A).withValues(alpha: 0.7),
                           ),
                         ),
                         child: Row(
@@ -610,10 +607,10 @@ class MapViewScreen extends ConsumerWidget {
                       error: (e, s) => Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A1D23).withOpacity(0.92),
+                          color: const Color(0xFF1A1D23).withValues(alpha: 0.92),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: const Color(0xFFE24B4A).withOpacity(0.7),
+                            color: const Color(0xFFE24B4A).withValues(alpha: 0.7),
                           ),
                         ),
                         child: Row(

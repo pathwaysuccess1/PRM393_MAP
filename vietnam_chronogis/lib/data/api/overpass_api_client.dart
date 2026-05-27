@@ -123,7 +123,9 @@ class OverpassApiClient {
     final key = 'bbox:$lonMin,$latMin,$lonMax,$latMax';
 
     // Dedupe concurrent identical requests
-    if (_inflight.containsKey(key)) return _inflight[key]!;
+    if (_inflight.containsKey(key)) {
+      return _inflight[key]!;
+    }
 
     final completer = Completer<List<OverpassPlace>>();
     _inflight[key] = completer.future;
@@ -183,7 +185,9 @@ class OverpassApiClient {
             cancelToken: cancelToken,
             cacheTtl: const Duration(days: 7),
           );
-          for (final p in cell) results.add(p);
+          for (final p in cell) {
+            results.add(p);
+          }
         } catch (e) {
           debugPrint('OverpassApi: cell fetch failed ($c,$r): $e');
           // Continue with other cells — resilient seeding
@@ -249,8 +253,9 @@ class OverpassApiClient {
             for (final el in elements) {
               try {
                 final p = OverpassPlace.fromElement(el as Map<String, dynamic>);
-                if (p.name.isNotEmpty && p.lat != 0 && p.lon != 0)
+                if (p.name.isNotEmpty && p.lat != 0 && p.lon != 0) {
                   places.add(p);
+                }
               } catch (e) {
                 debugPrint('OverpassApi: parse element error: $e');
               }
@@ -266,7 +271,7 @@ class OverpassApiClient {
             final retryAfter = _parseRetryAfter(resp.headers);
             final backoff = _jitteredBackoff(attempt, extraSeconds: retryAfter);
             debugPrint(
-              'OverpassApi: ${status} from $endpoint — backoff ${backoff.inSeconds}s (retryAfter: ${retryAfter}s)',
+              'OverpassApi: $status from $endpoint — backoff ${backoff.inSeconds}s (retryAfter: ${retryAfter}s)',
             );
             await Future.delayed(backoff);
             attempt++;
