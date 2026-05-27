@@ -1,6 +1,6 @@
 # 🗺️ Vietnam ChronoGIS — Hướng Dẫn Cài Đặt & Vận Hành
 
-> Bản đồ lịch sử hành chính Việt Nam 1975–2025, tích hợp AI và dữ liệu du lịch.
+> Ứng dụng bản đồ lịch sử hành chính Việt Nam, pha trộn dữ liệu địa lý, Overpass POI và AI chat Groq.
 
 ---
 
@@ -8,12 +8,12 @@
 
 1. [Yêu cầu hệ thống](#1-yêu-cầu-hệ-thống)
 2. [Cài đặt lần đầu](#2-cài-đặt-lần-đầu)
-3. [Cấu hình API Keys](#3-cấu-hình-api-keys)
+3. [Cấu hình API Key](#3-cấu-hình-api-key)
 4. [Chạy ứng dụng](#4-chạy-ứng-dụng)
 5. [Cấu trúc dự án](#5-cấu-trúc-dự-án)
-6. [Quá trình Seeding dữ liệu](#6-quá-trình-seeding-dữ-liệu)
-7. [Xử lý lỗi thường gặp](#7-xử-lý-lỗi-thường-gặp)
-8. [Reset & Làm mới dữ liệu](#8-reset--làm-mới-dữ-liệu)
+6. [Quá trình Seed dữ liệu](#6-quá-trình-seed-dữ-liệu)
+7. [Tính năng chính](#7-tính-năng-chính)
+8. [Lưu ý khi chạy](#8-lưu-ý-khi-chạy)
 
 ---
 
@@ -44,17 +44,16 @@ flutter doctor
 ```bash
 git clone <your-repo-url>
 cd vietnam_chronogis
-
 flutter pub get
 ```
 
-### 2.2 Chạy code generation (bắt buộc sau mỗi lần thay đổi model)
+### 2.2 Chạy code generation
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-> ⚠️ Nếu gặp lỗi conflict, chạy lệnh clean trước:
+> ⚠️ Nếu gặp lỗi conflict, chạy:
 > ```bash
 dart run build_runner clean
 dart run build_runner build --delete-conflicting-outputs
@@ -62,40 +61,46 @@ dart run build_runner build --delete-conflicting-outputs
 
 ---
 
-## 3. Cấu Hình API Keys
+## 3. Cấu Hình API Key
 
-App cần **2 API key** để hoạt động đầy đủ:
+App cần một key cho AI chat Groq.
 
-### 3.1 Gemini API Key (AI Chat)
+### 3.1 Groq API Key
 
-1. Vào [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Tạo API key miễn phí
-3. Lưu key lại
+- Biến môi trường Dart define: `GROQ_API_KEY`
+- App đọc giá trị từ `String.fromEnvironment('GROQ_API_KEY')`
+- Nếu không đặt key, app sẽ không khởi tạo được Groq chat.
 
-### 3.2 OpenTripMap API Key (Dữ liệu du lịch)
-
-1. Vào [opentripmap.io/product](https://opentripmap.io/product)
-2. Đăng ký tài khoản miễn phí
-3. Vào Dashboard → lấy API key
-4. Free tier: **5.000 request/ngày** — đủ để seed toàn bộ Việt Nam
-
-> 💡 Nếu chưa có key OpenTripMap, app vẫn chạy được — chỉ thiếu dữ liệu POI du lịch.
+> 💡 Dự án hiện sử dụng `lib/data/api/groq_service.dart` để gọi Groq OpenAI API.
 
 ---
 
 ## 4. Chạy Ứng Dụng
 
-### Cách 1: Truyền key qua `--dart-define` (khuyến nghị)
+### Chạy trực tiếp (Windows)
 
 ```bash
-flutter run -d windows \
-  --dart-define=GEMINI_API_KEY=your_gemini_key \
-  --dart-define=OTM_API_KEY=your_opentripmap_key
+cd vietnam_chronogis
+flutter run -d windows --dart-define=GROQ_API_KEY=your_groq_key
 ```
 
-### Cách 2: Dùng file `.env` (tiện hơn khi dev)
+### Chạy trên thiết bị khác hoặc web
 
-Tạo file `launch.json` trong `.vscode/`:
+```bash
+cd vietnam_chronogis
+flutter run --dart-define=GROQ_API_KEY=your_groq_key
+```
+
+### Build release (Windows)
+
+```bash
+cd vietnam_chronogis
+flutter build windows --dart-define=GROQ_API_KEY=your_groq_key
+```
+
+### VS Code launch config
+
+Tạo `.vscode/launch.json` với cấu hình:
 
 ```json
 {
@@ -106,22 +111,11 @@ Tạo file `launch.json` trong `.vscode/`:
       "request": "launch",
       "type": "dart",
       "args": [
-        "--dart-define=GEMINI_API_KEY=your_gemini_key",
-        "--dart-define=OTM_API_KEY=your_opentripmap_key"
+        "--dart-define=GROQ_API_KEY=your_groq_key"
       ]
     }
   ]
 }
-```
-
-Sau đó nhấn `F5` trong VS Code để chạy.
-
-### Build release (Windows)
-
-```bash
-flutter build windows \
-  --dart-define=GEMINI_API_KEY=your_gemini_key \
-  --dart-define=OTM_API_KEY=your_opentripmap_key
 ```
 
 ---
@@ -133,227 +127,93 @@ vietnam_chronogis/
 ├── lib/
 │   ├── core/
 │   │   ├── database/
-│   │   │   ├── app_database.dart        # Drift DB entry point
+│   │   │   ├── app_database.dart
 │   │   │   ├── tables/
 │   │   │   │   ├── administrative_units_table.dart
-│   │   │   │   ├── geojson_cache_table.dart
 │   │   │   │   ├── chat_history_table.dart
+│   │   │   │   ├── geojson_cache_table.dart
 │   │   │   │   ├── historical_events_table.dart
-│   │   │   │   └── tourism_pois_table.dart   ← dữ liệu du lịch
+│   │   │   │   └── tourism_places_table.dart
 │   │   │   └── daos/
 │   │   │       ├── administrative_unit_dao.dart
-│   │   │       ├── geojson_dao.dart
 │   │   │       ├── chat_dao.dart
+│   │   │       ├── geojson_dao.dart
 │   │   │       └── tourism_dao.dart
 │   │   ├── router/app_router.dart
 │   │   └── theme/
 │   │
 │   ├── data/
 │   │   ├── api/
-│   │   │   ├── gemini_service.dart          # AI chat
-│   │   │   ├── huggingface_api_client.dart  # Dữ liệu hành chính
-│   │   │   ├── opentripmap_client.dart      # Dữ liệu du lịch ← mới
-│   │   │   └── models/
-│   │   │       ├── hf_row_model.dart
-│   │   │       └── otm_models.dart          ← mới
+│   │   │   ├── groq_service.dart
+│   │   │   ├── overpass_api_client.dart
+│   │   │   └── ...
 │   │   ├── geojson/
-│   │   │   ├── geojson_parser.dart
-│   │   │   ├── province_geojson_service.dart
-│   │   │   └── temporal_geojson_service.dart
+│   │   │   └── ...
 │   │   └── repositories/
-│   │       ├── administrative_unit_repository.dart
 │   │       ├── chat_repository.dart
-│   │       └── tourism_repository.dart      ← dùng OpenTripMap
+│   │       ├── administrative_unit_repository.dart
+│   │       └── tourism_repository.dart
 │   │
 │   ├── features/
-│   │   ├── map/presentation/
-│   │   │   ├── map_view_screen.dart
-│   │   │   └── widgets/
-│   │   ├── ai_chat/presentation/
-│   │   └── shell/presentation/
-│   │       ├── app_shell.dart
-│   │       └── seeding_screen.dart
+│   │   ├── ai_chat/
+│   │   ├── explorer/
+│   │   ├── map/
+│   │   └── shell/
 │   │
 │   ├── shared/
 │   │   ├── models/
 │   │   └── providers/
-│   │       ├── seed_provider.dart       # Điều phối quá trình seed
+│   │       ├── seed_provider.dart
 │   │       ├── database_provider.dart
-│   │       ├── timeline_provider.dart
+│   │       ├── chat_provider.dart
+│   │       ├── tourism_provider.dart
 │   │       └── map_provider.dart
 │   │
 │   └── main.dart
 │
 ├── assets/
-│   └── geojson/
-│       └── gadm41_VNM_1.json            # GeoJSON 63 tỉnh (cần thêm thủ công)
-│
+│   └── geojson/gadm41_VNM_1.json
+├── bin/
+│   └── check_db.dart
+├── scripts/
+│   └── server_seeder.dart
 └── pubspec.yaml
 ```
 
 ---
 
-## 6. Quá Trình Seeding Dữ Liệu
+## 6. Quá Trình Seed Dữ Liệu
 
-Lần đầu chạy app, hệ thống sẽ tự động tải dữ liệu qua 2 phase:
+App seed dữ liệu theo hai giai đoạn chính:
 
-### Phase 1 — Core Data (0% → 90%) — **Bắt buộc**
+### Phase 1 — Core Data
 
-| Bước | Nguồn | Mô tả |
-|---|---|---|
-| 1. Admin units | HuggingFace API | 34 tỉnh sau sáp nhập NQ 202/2025 |
-| 2. GeoJSON | File local `assets/geojson/` | Ranh giới 63 tỉnh GADM |
+- `lib/features/shell/presentation/seeding_screen.dart` hiển thị tiến trình.
+- `lib/shared/providers/seed_provider.dart` điều phối seed.
+- Dữ liệu admin được tải qua nguồn hiện tại và lưu vào SQLite Drift.
+- GeoJSON ranh giới tỉnh/nội tỉnh lấy từ `assets/geojson/gadm41_VNM_1.json`.
 
-Sau khi Phase 1 hoàn tất, app đánh dấu `seeded_core_v4 = true` trong SharedPreferences. **Lần sau mở app sẽ bỏ qua phase này hoàn toàn.**
+### Phase 2 — Du lịch / POI
 
-### Phase 2 — Tourism POI (90% → 100%) — **Tùy chọn**
+- `lib/data/api/overpass_api_client.dart` gọi Overpass API công khai.
+- `lib/data/repositories/tourism_repository.dart` xử lý truy vấn vùng và cache.
+- Dữ liệu POI lưu vào bảng `tourism_places_table.dart`.
 
-| Bước | Nguồn | Mô tả |
-|---|---|---|
-| 3. POI du lịch | OpenTripMap API | Danh lam, di tích, địa điểm nổi bật |
-
-- Chia thành 6 vùng kinh tế, query tuần tự với delay 2 giây/vùng
-- Nếu thất bại (rate limit, mất mạng...) → app vẫn chạy bình thường
-- Sẽ thử lại ở lần mở app tiếp theo cho đến khi có dữ liệu
-
-### Sơ đồ tiến trình
-
-```
-0%   ──── 75%      Tải dữ liệu hành chính (HuggingFace)
-75%  ── 78%        Khởi tạo GeoJSON
-78%  ── 90%        Xử lý bản đồ tỉnh thành
-     [Core seeded ✓]
-90%  ──────── 100% Tải POI du lịch (OpenTripMap) — optional
-     [Tourism seeded ✓]
-```
+> 💡 Overpass không cần API key, nhưng có thể bị giới hạn request. App dùng cache và retry để giảm tải.
 
 ---
 
-## 7. Xử Lý Lỗi Thường Gặp
+## 7. Tính Năng Chính
 
-### ❌ Lỗi: `OverpassApi: rate_limited (429)`
-
-**Nguyên nhân:** IP bị Overpass API chặn do gửi quá nhiều request.
-
-**Giải pháp:** App đã được cập nhật để dùng **OpenTripMap** thay thế. Lỗi này không còn xuất hiện nữa sau khi cập nhật code mới.
-
----
-
-### ❌ Lỗi: App stuck ở 82% mãi không tiếp tục
-
-**Nguyên nhân:** Tourism seeding bị lỗi nhưng không được đánh dấu là done, gây vòng lặp vô tận.
-
-**Giải pháp:**
-1. Cập nhật `seed_provider.dart` theo phiên bản mới nhất
-2. Xóa SharedPreferences cũ bằng cách xóa database (xem mục 8)
+- Bản đồ GIS lịch sử hành chính Việt Nam
+- Seeding dữ liệu admin + GeoJSON ranh giới tỉnh
+- Du lịch/POI từ Overpass API
+- AI chat dựa trên Groq stream API
+- Riverpod + Drift + Flutter Map + GoRouter
 
 ---
 
-### ❌ Lỗi: `MigrationException` hoặc `no such table`
+## 8. Lưu Ý Khi Chạy
 
-**Nguyên nhân:** Schema DB thay đổi (ví dụ thêm bảng `tourism_pois`) nhưng file SQLite cũ chưa được migrate.
-
-**Giải pháp:** Xóa database cũ và để app tự tạo lại (xem mục 8).
-
----
-
-### ❌ Lỗi: `GEMINI_API_KEY is not set`
-
-**Nguyên nhân:** Chạy app mà không truyền `--dart-define`.
-
-**Giải pháp:**
-```bash
-flutter run -d windows --dart-define=GEMINI_API_KEY=your_key
-```
-
----
-
-### ❌ Lỗi: `Failed to match GADM province: ...`
-
-**Nguyên nhân:** File `assets/geojson/gadm41_VNM_1.json` bị thiếu hoặc sai format.
-
-**Giải pháp:**
-1. Tải file GeoJSON từ [gadm.org](https://gadm.org/download_country.html) — chọn Vietnam, Level 1
-2. Đặt vào `assets/geojson/gadm41_VNM_1.json`
-3. Đảm bảo file đã được khai báo trong `pubspec.yaml`:
-   ```yaml
-   flutter:
-     assets:
-       - assets/geojson/
-   ```
-
----
-
-### ❌ Map hiển thị toàn màu tối, không có tile
-
-**Nguyên nhân:** Không có kết nối internet hoặc OpenStreetMap tile server bị chặn.
-
-**Giải pháp:** Kiểm tra kết nối mạng. Tile URL mặc định:
-- Street: `https://tile.openstreetmap.org/{z}/{x}/{y}.png`
-- Satellite: `https://server.arcgisonline.com/...`
-
----
-
-## 8. Reset & Làm Mới Dữ Liệu
-
-### Xóa database SQLite
-
-Database được lưu tại:
-
-```
-C:\Users\<YourName>\Documents\vietnam_chronogis\chronogis.sqlite
-```
-
-Xóa file này và khởi động lại app để seed lại từ đầu.
-
-### Xóa chỉ tourism data (giữ lại admin + geojson)
-
-Trong SharedPreferences, xóa key `seeded_tourism_v4`. Cách dễ nhất là thêm tạm một nút trong Settings:
-
-```dart
-// Xóa tourism flag để app re-seed tourism lần sau
-await SharedPreferences.getInstance()
-    .then((p) => p.remove('seeded_tourism_v4'));
-```
-
-### Reset toàn bộ (fresh start)
-
-```dart
-final prefs = await SharedPreferences.getInstance();
-await prefs.remove('seeded_core_v4');
-await prefs.remove('seeded_tourism_v4');
-// Sau đó xóa file chronogis.sqlite
-```
-
----
-
-## 9. Thông Tin Kỹ Thuật
-
-### Các nguồn dữ liệu
-
-| Loại dữ liệu | Nguồn | Ghi chú |
-|---|---|---|
-| Đơn vị hành chính (34 tỉnh) | HuggingFace `tmquan/sapnhap-bando-vn` | Dữ liệu NQ 202/2025/QH15 |
-| Ranh giới bản đồ (63 tỉnh) | GADM Level 1 GeoJSON | Ranh giới lịch sử |
-| AI Chat | Google Gemini 2.0 Flash | Lịch sử hành chính VN |
-| POI du lịch | OpenTripMap API | 6 vùng kinh tế |
-
-### Schema phiên bản
-
-| Phiên bản | Thay đổi |
-|---|---|
-| v1 | Bảng gốc: administrative_units, historical_events, geo_json_caches, chat_history_messages |
-| v2 | Thêm bảng: tourism_pois |
-
-### Rate limits
-
-| API | Giới hạn |
-|---|---|
-| HuggingFace (dataset) | Không giới hạn (public dataset) |
-| OpenTripMap | 5.000 request/ngày (free tier) |
-| Gemini API | 15 RPM / 1.500 RPD (free tier) |
-| OpenStreetMap tiles | ~1 request/giây (khuyến nghị) |
-
----
-
-*Cập nhật lần cuối: 2026 — Vietnam ChronoGIS v1.0*
+- Khởi chạy từ thư mục `vietnam_chronogis`.
+- Đặt `GROQ_API_KEY` qua `--dart-define` nếu muốn dùng chức năng chat.
